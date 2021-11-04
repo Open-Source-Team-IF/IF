@@ -8,6 +8,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -45,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param view 이벤트 처리 할 view
      */
+
     public void submitOrder(View view) {
         String name = "Name : " + mNameEditText.getText();
         String product = "Product : " + mProductTextView.getText();
@@ -66,8 +82,73 @@ public class MainActivity extends AppCompatActivity {
                 + "Thank you!";
 
         displayMessage(message);
+        Toast.makeText(this.getApplicationContext(),"Order is completed.", Toast.LENGTH_SHORT).show();
 
+        sendJsonDataToServer();
+    }
 
+    private String sendJsonDataToServer(){
+        String URL = "http://146.56.166.36:7579/Mobius";
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+        httpPost.setHeader("Content-type", "application/json; charset=utf-8");
+
+        String name = mNameEditText.getText().toString();
+        String product = mProductTextView.getText().toString();
+        String quantity = String.valueOf(mQuantity);
+        String product2 = mProductTextView2.getText().toString();
+        String quantity2 = String.valueOf(mQuantity2);
+        String price = String.valueOf(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
+
+        JSONObject jObj = new JSONObject();
+        JSONObject tmp = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+        try{
+            tmp.put("product", product);
+            tmp.put("quantity", quantity);
+            jsonArray.put(tmp);
+            tmp = new JSONObject();
+            tmp.put("product", product2);
+            tmp.put("quantity", quantity2);
+            jsonArray.put(tmp);
+            jObj.put("order", jsonArray);
+            jObj.put("name", name);
+            jObj.put("price", price);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            StringEntity se;
+            se = new StringEntity(jObj.toString());
+            HttpEntity he = se;
+            httpPost.setEntity(he);
+        } catch(UnsupportedEncodingException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            HttpResponse response = httpClient.execute(httpPost);
+            BufferedReader bufReader =
+                    new BufferedReader(new InputStreamReader(
+                            response.getEntity().getContent(),
+                            "utf-8"
+                    ));
+
+            String line = null;
+            String result = "";
+
+            while((line = bufReader.readLine())!=null){
+                result += line;
+            }
+            return result;
+        } catch(ClientProtocolException e){
+            e.printStackTrace();
+            return "Error" + e.toString();
+        } catch(IOException e){
+            e.printStackTrace();
+            return "Error" + e.toString();
+        }
     }
 
     public void increment(View view) {
