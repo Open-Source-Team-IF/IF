@@ -7,14 +7,13 @@
 > ![image](https://user-images.githubusercontent.com/37334007/141078321-25a782c6-95b4-4242-bd4f-6aeed059198a.png)
 
 # 라인트레이싱 결선 방법
-> TB6612FNG 모터드라이브 기준
-> 
-> ![image](https://user-images.githubusercontent.com/37334007/141079531-05d169af-f7a3-4f5c-9f6c-ca1e4741c1f7.png)
-> 
-> AIN, BIN : 바퀴의 방향을 조절 (정방향 / 역방향) <br>
-> PWMA, PWMB : 바퀴의 세기를 조절 <br>
-> STB : 모터의 완전정지에 사용 (사용하지 않아도 무방) <br>
-> 
+> + TB6612FNG 모터드라이브를 기준작성하였다. <br>
+>   * AIN, BIN : 바퀴의 방향을 조절 (정방향 / 역방향) <br>
+>   * PWMA, PWMB : 바퀴의 세기를 조절 <br>
+>   * STB : 모터의 완전정지에 사용 (사용하지 않아도 무방) <br>
+> + 아두이노를 이용해 IN, PWM 에 값을 입력하여주면 Output PIN을 통하여 모터 제어가 가능하다.
 > ![image](https://user-images.githubusercontent.com/37334007/141080347-0a801f15-aa1e-4b46-bfe8-139adb28470c.png)
+> ![image](https://user-images.githubusercontent.com/37334007/141081223-07ce5435-f928-473b-a001-9a97f794579a.png)
+
 
 
