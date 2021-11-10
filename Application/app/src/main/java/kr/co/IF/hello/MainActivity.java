@@ -19,9 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -53,8 +51,91 @@ public class MainActivity extends AppCompatActivity {
         mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         mQuantityTextView2 = (TextView) findViewById(R.id.quantity_text_view2);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
+
+        requestAECreation();
+        requestContainerCreation();
     }
 
+    private void requestAECreation(){
+        String URL = "http://146.56.166.36:7579/Mobius";
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+        httpPost.setHeader("Content-type", "application/json; ty=2");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("X-M2M-RI", "1234");
+        httpPost.setHeader("X-M2M-Origin", "CAE1");
+
+        JSONObject jObj = new JSONObject();
+        JSONObject tmp = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        try{
+            tmp.put("rn", "app1");
+            tmp.put("api", "application");
+            tmp.put("rr", true);
+            jsonArray.put(tmp);
+            jObj.put("m2m:ae", jsonArray);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            StringEntity se;
+            se = new StringEntity(jObj.toString());
+            HttpEntity he = se;
+            httpPost.setEntity(he);
+        } catch(UnsupportedEncodingException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            httpClient.execute(httpPost);
+        } catch(ClientProtocolException e){
+            e.printStackTrace();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void requestContainerCreation(){
+        String URL = "http://146.56.166.36:7579/Mobius/app1";
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+        httpPost.setHeader("Content-type", "application/json; ty=3");
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("X-M2M-RI", "1234");
+        httpPost.setHeader("X-M2M-Origin", "CAE1");
+
+        JSONObject jObj = new JSONObject();
+        JSONObject tmp = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        try{
+            tmp.put("rn", "status");
+            tmp.put("mni", 100);
+            jsonArray.put(tmp);
+            jObj.put("m2m:cnt", jsonArray);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            StringEntity se;
+            se = new StringEntity(jObj.toString());
+            HttpEntity he = se;
+            httpPost.setEntity(he);
+        } catch(UnsupportedEncodingException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            httpClient.execute(httpPost);
+        } catch(ClientProtocolException e){
+            e.printStackTrace();
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     /**
      * 주문 버튼 이벤트 처리
      *
@@ -87,33 +168,33 @@ public class MainActivity extends AppCompatActivity {
         sendJsonDataToServer();
     }
 
-    private String sendJsonDataToServer(){
-        String URL = "http://146.56.166.36:7579/Mobius";
+    private void sendJsonDataToServer(){
+        String URL = "http://146.56.166.36:7579/Mobius/app1/status";
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(URL);
-        httpPost.setHeader("Content-type", "application/json; charset=utf-8");
+        httpPost.setHeader("Content-type", "application/json; ty=4");
+        httpPost.setHeader("X-M2M-Origin", "CAE1");
+        httpPost.setHeader("X-M2M-RI", "1234");
+        httpPost.setHeader("Accept", "application/json");
 
-        String name = mNameEditText.getText().toString();
         String product = mProductTextView.getText().toString();
         String quantity = String.valueOf(mQuantity);
         String product2 = mProductTextView2.getText().toString();
         String quantity2 = String.valueOf(mQuantity2);
-        String price = String.valueOf(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
 
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
+        JSONObject jObj2 = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         try{
             tmp.put("product", product);
             tmp.put("quantity", quantity);
+            tmp.put("product2", product2);
+            tmp.put("quantity2", quantity2);
+            tmp.put("order", 0);
             jsonArray.put(tmp);
-            tmp = new JSONObject();
-            tmp.put("product", product2);
-            tmp.put("quantity", quantity2);
-            jsonArray.put(tmp);
-            jObj.put("order", jsonArray);
-            jObj.put("name", name);
-            jObj.put("price", price);
+            jObj2.put("con", jsonArray);
+            jObj.put("m2m:cin", jObj2);
         } catch(JSONException e1){
             e1.printStackTrace();
         }
@@ -129,25 +210,10 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             HttpResponse response = httpClient.execute(httpPost);
-            BufferedReader bufReader =
-                    new BufferedReader(new InputStreamReader(
-                            response.getEntity().getContent(),
-                            "utf-8"
-                    ));
-
-            String line = null;
-            String result = "";
-
-            while((line = bufReader.readLine())!=null){
-                result += line;
-            }
-            return result;
         } catch(ClientProtocolException e){
             e.printStackTrace();
-            return "Error" + e.toString();
         } catch(IOException e){
             e.printStackTrace();
-            return "Error" + e.toString();
         }
     }
 
