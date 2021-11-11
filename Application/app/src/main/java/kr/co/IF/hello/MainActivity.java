@@ -8,19 +8,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -57,14 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestAECreation(){
-        String URL = "http://146.56.166.36:7579/Mobius";
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(URL);
-        httpPost.setHeader("Content-type", "application/json; ty=2");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("X-M2M-RI", "1234");
-        httpPost.setHeader("X-M2M-Origin", "CAE1");
-
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
         JSONArray jsonArray = new JSONArray();
@@ -80,32 +68,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            StringEntity se;
-            se = new StringEntity(jObj.toString());
-            HttpEntity he = se;
-            httpPost.setEntity(he);
-        } catch(UnsupportedEncodingException e1){
-            e1.printStackTrace();
-        }
+            String host_url = "http://146.56.166.36:7579/Mobius";
+            HttpURLConnection conn = null;
 
-        try{
-            httpClient.execute(httpPost);
-        } catch(ClientProtocolException e){
-            e.printStackTrace();
-        } catch(IOException e){
-            e.printStackTrace();
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=2");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
         }
     }
 
     private void requestContainerCreation(){
-        String URL = "http://146.56.166.36:7579/Mobius/app1";
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(URL);
-        httpPost.setHeader("Content-type", "application/json; ty=3");
-        httpPost.setHeader("Accept", "application/json");
-        httpPost.setHeader("X-M2M-RI", "1234");
-        httpPost.setHeader("X-M2M-Origin", "CAE1");
-
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
         JSONArray jsonArray = new JSONArray();
@@ -120,20 +108,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            StringEntity se;
-            se = new StringEntity(jObj.toString());
-            HttpEntity he = se;
-            httpPost.setEntity(he);
-        } catch(UnsupportedEncodingException e1){
-            e1.printStackTrace();
-        }
+            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            HttpURLConnection conn = null;
 
-        try{
-            httpClient.execute(httpPost);
-        } catch(ClientProtocolException e){
-            e.printStackTrace();
-        } catch(IOException e){
-            e.printStackTrace();
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=3");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
         }
     }
     /**
@@ -169,14 +165,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendJsonDataToServer(){
-        String URL = "http://146.56.166.36:7579/Mobius/app1/status";
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(URL);
-        httpPost.setHeader("Content-type", "application/json; ty=4");
-        httpPost.setHeader("X-M2M-Origin", "CAE1");
-        httpPost.setHeader("X-M2M-RI", "1234");
-        httpPost.setHeader("Accept", "application/json");
-
         String product = mProductTextView.getText().toString();
         String quantity = String.valueOf(mQuantity);
         String product2 = mProductTextView2.getText().toString();
@@ -200,20 +188,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            StringEntity se;
-            se = new StringEntity(jObj.toString());
-            HttpEntity he = se;
-            httpPost.setEntity(he);
-        } catch(UnsupportedEncodingException e1){
-            e1.printStackTrace();
-        }
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/status";
+            HttpURLConnection conn = null;
 
-        try{
-            HttpResponse response = httpClient.execute(httpPost);
-        } catch(ClientProtocolException e){
-            e.printStackTrace();
-        } catch(IOException e){
-            e.printStackTrace();
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=4");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("Accept", "application/json");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
         }
     }
 
