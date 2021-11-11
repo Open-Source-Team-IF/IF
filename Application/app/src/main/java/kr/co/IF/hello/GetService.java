@@ -42,7 +42,7 @@ public class GetService extends Service{
             @Override
             public void run() {
                 try{
-                    String host_url = "http://146.56.166.36:7579/Mobius/app1/status/la";
+                    String host_url = "http://146.56.166.36:7579/Mobius/app1/order/la";
                     HttpURLConnection conn;
 
                     URL url = new URL(host_url);

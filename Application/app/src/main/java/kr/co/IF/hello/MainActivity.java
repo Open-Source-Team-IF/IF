@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,14 +55,12 @@ public class MainActivity extends AppCompatActivity {
     private void requestAECreation(){
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
 
         try{
             tmp.put("rn", "app1");
             tmp.put("api", "application");
             tmp.put("rr", true);
-            jsonArray.put(tmp);
-            jObj.put("m2m:ae", jsonArray);
+            jObj.put("m2m:ae", tmp);
         } catch(JSONException e1){
             e1.printStackTrace();
         }
@@ -97,13 +94,47 @@ public class MainActivity extends AppCompatActivity {
     private void requestContainerCreation(){
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
 
         try{
-            tmp.put("rn", "status");
+            tmp.put("rn", "product");
             tmp.put("mni", 100);
-            jsonArray.put(tmp);
-            jObj.put("m2m:cnt", jsonArray);
+            jObj.put("m2m:cnt", tmp);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            HttpURLConnection conn = null;
+
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=3");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }
+
+        jObj = new JSONObject();
+        tmp = new JSONObject();
+
+        try{
+            tmp.put("rn", "order");
+            tmp.put("mni", 100);
+            jObj.put("m2m:cnt", tmp);
         } catch(JSONException e1){
             e1.printStackTrace();
         }
@@ -176,22 +207,55 @@ public class MainActivity extends AppCompatActivity {
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
         JSONObject jObj2 = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
         try{
             tmp.put("product", product);
             tmp.put("quantity", quantity);
             tmp.put("product2", product2);
             tmp.put("quantity2", quantity2);
-            tmp.put("order", 0);
-            jsonArray.put(tmp);
-            jObj2.put("con", jsonArray);
+            jObj2.put("con", tmp);
             jObj.put("m2m:cin", jObj2);
         } catch(JSONException e1){
             e1.printStackTrace();
         }
 
         try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1/status";
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/product";
+            HttpURLConnection conn = null;
+
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=4");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("Accept", "application/json");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }
+
+        jObj = new JSONObject();
+        tmp = new JSONObject();
+        jObj2 = new JSONObject();
+        try{
+            tmp.put("order", 0);
+            jObj2.put("con", tmp);
+            jObj.put("m2m:cin", jObj2);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/order";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
