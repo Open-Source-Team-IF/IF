@@ -1,5 +1,6 @@
 package kr.co.IF.hello;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -162,6 +163,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this.getApplicationContext(),"Order is completed.", Toast.LENGTH_SHORT).show();
 
         sendJsonDataToServer();
+        startService(new Intent(getApplicationContext(), MainActivity.class));
+        stopService(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     private void sendJsonDataToServer(){
