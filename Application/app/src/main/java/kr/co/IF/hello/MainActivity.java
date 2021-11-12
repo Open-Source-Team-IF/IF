@@ -94,7 +94,41 @@ public class MainActivity extends AppCompatActivity {
     private void requestContainerCreation(){
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
+        try{
+            tmp.put("rn", "user1");
+            tmp.put("mni", 100);
+            jObj.put("m2m:cnt", tmp);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
 
+        try{
+            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            HttpURLConnection conn = null;
+
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=3");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }
+
+        jObj = new JSONObject();
+        tmp = new JSONObject();
         try{
             tmp.put("rn", "product");
             tmp.put("mni", 100);
@@ -104,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/user1";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
@@ -130,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
         jObj = new JSONObject();
         tmp = new JSONObject();
-
         try{
             tmp.put("rn", "order");
             tmp.put("mni", 100);
@@ -140,43 +173,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1";
-            HttpURLConnection conn = null;
-
-            URL url = new URL(host_url);
-            conn = (HttpURLConnection)url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-type", "application/json; ty=3");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("X-M2M-RI", "1234");
-            conn.setRequestProperty("X-M2M-Origin", "CAE1");
-
-            conn.setDoOutput(true);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-
-            bw.write(jObj.toString());
-            bw.flush();
-            bw.close();
-        }catch(IOException ie){
-            ie.printStackTrace();
-        }catch(Exception ee){
-            ee.printStackTrace();
-        }
-
-        jObj = new JSONObject();
-        tmp = new JSONObject();
-
-        try{
-            tmp.put("rn", "username");
-            tmp.put("mni", 100);
-            jObj.put("m2m:cnt", tmp);
-        } catch(JSONException e1){
-            e1.printStackTrace();
-        }
-
-        try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/user1";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
@@ -230,8 +227,8 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this.getApplicationContext(),"Order is completed.", Toast.LENGTH_SHORT).show();
 
         sendJsonDataToServer();
-        startService(new Intent(getApplicationContext(), MainActivity.class));
-        stopService(new Intent(getApplicationContext(), MainActivity.class));
+        startService(new Intent(getApplicationContext(), GetService.class));
+        stopService(new Intent(getApplicationContext(), GetService.class));
     }
 
     private void sendJsonDataToServer(){
@@ -256,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1/product";
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/product";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
@@ -292,43 +289,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1/order";
-            HttpURLConnection conn = null;
-
-            URL url = new URL(host_url);
-            conn = (HttpURLConnection)url.openConnection();
-
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-type", "application/json; ty=4");
-            conn.setRequestProperty("X-M2M-Origin", "CAE1");
-            conn.setRequestProperty("X-M2M-RI", "1234");
-            conn.setRequestProperty("Accept", "application/json");
-
-            conn.setDoOutput(true);
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-
-            bw.write(jObj.toString());
-            bw.flush();
-            bw.close();
-        }catch(IOException ie){
-            ie.printStackTrace();
-        }catch(Exception ee){
-            ee.printStackTrace();
-        }
-
-        jObj = new JSONObject();
-        tmp = new JSONObject();
-        jObj2 = new JSONObject();
-        try{
-            tmp.put("username", name);
-            jObj2.put("con", tmp);
-            jObj.put("m2m:cin", jObj2);
-        } catch(JSONException e1){
-            e1.printStackTrace();
-        }
-
-        try{
-            String host_url = "http://146.56.166.36:7579/Mobius/app1/username";
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/order";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
