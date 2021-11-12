@@ -163,6 +163,42 @@ public class MainActivity extends AppCompatActivity {
         }catch(Exception ee){
             ee.printStackTrace();
         }
+
+        jObj = new JSONObject();
+        tmp = new JSONObject();
+
+        try{
+            tmp.put("rn", "username");
+            tmp.put("mni", 100);
+            jObj.put("m2m:cnt", tmp);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            String host_url = "http://146.56.166.36:7579/Mobius/app1";
+            HttpURLConnection conn = null;
+
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=3");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }
     }
     /**
      * 주문 버튼 이벤트 처리
@@ -203,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         String quantity = String.valueOf(mQuantity);
         String product2 = mProductTextView2.getText().toString();
         String quantity2 = String.valueOf(mQuantity2);
+        String name = mNameEditText.getText().toString();
 
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
@@ -256,6 +293,42 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             String host_url = "http://146.56.166.36:7579/Mobius/app1/order";
+            HttpURLConnection conn = null;
+
+            URL url = new URL(host_url);
+            conn = (HttpURLConnection)url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-type", "application/json; ty=4");
+            conn.setRequestProperty("X-M2M-Origin", "CAE1");
+            conn.setRequestProperty("X-M2M-RI", "1234");
+            conn.setRequestProperty("Accept", "application/json");
+
+            conn.setDoOutput(true);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+
+            bw.write(jObj.toString());
+            bw.flush();
+            bw.close();
+        }catch(IOException ie){
+            ie.printStackTrace();
+        }catch(Exception ee){
+            ee.printStackTrace();
+        }
+
+        jObj = new JSONObject();
+        tmp = new JSONObject();
+        jObj2 = new JSONObject();
+        try{
+            tmp.put("username", name);
+            jObj2.put("con", tmp);
+            jObj.put("m2m:cin", jObj2);
+        } catch(JSONException e1){
+            e1.printStackTrace();
+        }
+
+        try{
+            String host_url = "http://146.56.166.36:7579/Mobius/app1/username";
             HttpURLConnection conn = null;
 
             URL url = new URL(host_url);
