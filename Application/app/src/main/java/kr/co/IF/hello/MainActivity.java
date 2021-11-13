@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             bw.close();
 
             int responseCode = conn.getResponseCode();
-            System.out.println(responseCode);
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -146,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
             bw.close();
 
             int responseCode = conn.getResponseCode();
-            System.out.println(responseCode);
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -263,6 +261,7 @@ public class MainActivity extends AppCompatActivity {
 
         startService(new Intent(getApplicationContext(), GetService.class));
         stopService(new Intent(getApplicationContext(), GetService.class));
+
     }
 
     private void requestCinCreation(){

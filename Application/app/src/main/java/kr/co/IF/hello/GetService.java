@@ -38,71 +38,64 @@ public class GetService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        new Thread(){
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask(){
+            @Override
             public void run(){
-                try{
-                    Timer timer = new Timer();
-                    TimerTask task = new TimerTask() {
-                        @Override
-                        public void run() {
-                            try{
-                                String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/order/la";
-                                HttpURLConnection conn;
+                new Thread(){
+                    public void run(){
+                        try{
+                            String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/order/la";
+                            HttpURLConnection conn;
 
-                                URL url = new URL(host_url);
-                                conn = (HttpURLConnection)url.openConnection();
+                            URL url = new URL(host_url);
+                            conn = (HttpURLConnection)url.openConnection();
 
-                                conn.setRequestMethod("GET");
-                                conn.setRequestProperty("Accept", "application/json");
-                                conn.setRequestProperty("X-M2M-RI", "1234");
-                                conn.setRequestProperty("X-M2M-Origin", "CAE1");
+                            conn.setRequestMethod("GET");
+                            conn.setRequestProperty("Accept", "application/json");
+                            conn.setRequestProperty("X-M2M-RI", "1234");
+                            conn.setRequestProperty("X-M2M-Origin", "CAE1");
 
-                                conn.setDoOutput(true);
-                                conn.setDoInput(true);
+                            conn.setDoInput(true);
 
-                                int responseCode = conn.getResponseCode();
-                                System.out.println(responseCode);
+                            int responseCode = conn.getResponseCode();
+                            System.out.println(responseCode);
 
-                                InputStream is = conn.getInputStream();
-                                StringBuilder sb = new StringBuilder();
-                                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                                String result;
-                                while((result = br.readLine())!=null){
-                                    sb.append(result + "\n");
-                                }
-
-                                result = sb.toString();
-
-                                JSONObject jsonObj = new JSONObject(result);
-                                JSONObject m2m = jsonObj.getJSONObject("m2m:cin");
-                                JSONObject con = m2m.getJSONObject("con");
-
-                                int order = (int)con.get("order");
-                                if(order == 1)
-                                    timer.cancel();
-                            }catch(IOException ie){
-                                ie.printStackTrace();
-                            }catch(Exception ee){
-                                ee.printStackTrace();
+                            InputStream is = conn.getInputStream();
+                            StringBuilder sb = new StringBuilder();
+                            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                            String result;
+                            while((result = br.readLine())!=null){
+                                sb.append(result + "\n");
                             }
+
+                            result = sb.toString();
+
+                            JSONObject jsonObj = new JSONObject(result);
+                            JSONObject m2m = jsonObj.getJSONObject("m2m:cin");
+                            JSONObject con = m2m.getJSONObject("con");
+
+                            int order = (int)con.get("order");
+                            if(order == 1){
+                                timer.cancel();
+                                noti_order();
+                            }
+
+                        }catch(IOException ie){
+                            ie.printStackTrace();
+                        }catch(Exception ee){
+                            ee.printStackTrace();
                         }
-                    };
-                    timer.schedule(task, 1000, 5000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    }
+                }.start();
             }
-        }.start();
-
-
+        };
+        timer.schedule(task, 1000, 5000);
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
+    public void noti_order(){
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder builder;
@@ -136,5 +129,12 @@ public class GetService extends Service{
         Notification notification = builder.build();
 
         notificationManager.notify(1, notification);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+
     }
 }
