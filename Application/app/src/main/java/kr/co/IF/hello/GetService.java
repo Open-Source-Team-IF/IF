@@ -38,50 +38,62 @@ public class GetService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
+        new Thread(){
+            public void run(){
                 try{
-                    String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/order/la";
-                    HttpURLConnection conn;
+                    Timer timer = new Timer();
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            try{
+                                String host_url = "http://146.56.166.36:7579/Mobius/app1/user1/order/la";
+                                HttpURLConnection conn;
 
-                    URL url = new URL(host_url);
-                    conn = (HttpURLConnection)url.openConnection();
+                                URL url = new URL(host_url);
+                                conn = (HttpURLConnection)url.openConnection();
 
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Accept", "application/json");
-                    conn.setRequestProperty("X-M2M-RI", "1234");
-                    conn.setRequestProperty("X-M2M-Origin", "CAE1");
+                                conn.setRequestMethod("GET");
+                                conn.setRequestProperty("Accept", "application/json");
+                                conn.setRequestProperty("X-M2M-RI", "1234");
+                                conn.setRequestProperty("X-M2M-Origin", "CAE1");
 
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
+                                conn.setDoOutput(true);
+                                conn.setDoInput(true);
 
-                    InputStream is = conn.getInputStream();
-                    StringBuilder sb = new StringBuilder();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                    String result;
-                    while((result = br.readLine())!=null){
-                        sb.append(result + "\n");
-                    }
+                                int responseCode = conn.getResponseCode();
+                                System.out.println(responseCode);
 
-                    result = sb.toString();
+                                InputStream is = conn.getInputStream();
+                                StringBuilder sb = new StringBuilder();
+                                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                                String result;
+                                while((result = br.readLine())!=null){
+                                    sb.append(result + "\n");
+                                }
 
-                    JSONObject jsonObj = new JSONObject(result);
-                    JSONObject m2m = jsonObj.getJSONObject("m2m:cin");
-                    JSONObject con = m2m.getJSONObject("con");
+                                result = sb.toString();
 
-                    int order = (int)con.get("order");
-                    if(order == 1)
-                        timer.cancel();
-                }catch(IOException ie){
-                    ie.printStackTrace();
-                }catch(Exception ee){
-                    ee.printStackTrace();
+                                JSONObject jsonObj = new JSONObject(result);
+                                JSONObject m2m = jsonObj.getJSONObject("m2m:cin");
+                                JSONObject con = m2m.getJSONObject("con");
+
+                                int order = (int)con.get("order");
+                                if(order == 1)
+                                    timer.cancel();
+                            }catch(IOException ie){
+                                ie.printStackTrace();
+                            }catch(Exception ee){
+                                ee.printStackTrace();
+                            }
+                        }
+                    };
+                    timer.schedule(task, 1000, 5000);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        };
-        timer.schedule(task, 1000, 5000);
+        }.start();
+
 
 
         return super.onStartCommand(intent, flags, startId);
@@ -107,10 +119,10 @@ public class GetService extends Service{
             builder = new NotificationCompat.Builder(this, channelID);
         }
         else{
-            builder = new NotificationCompat.Builder(this, (Notification) null);
+            builder = new NotificationCompat.Builder(this, "default");
         }
         //Setting notification alarm's icon
-        builder.setSmallIcon(R.drawable.icon);
+        builder.setSmallIcon(R.drawable.ic_launcher_foreground);
 
         //Setting alarm's title and text
         builder.setContentTitle("Order App");

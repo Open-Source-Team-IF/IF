@@ -47,9 +47,28 @@ public class MainActivity extends AppCompatActivity {
         mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         mQuantityTextView2 = (TextView) findViewById(R.id.quantity_text_view2);
         mNameEditText = (EditText) findViewById(R.id.name_edit_text);
+    }
 
-        requestAECreation();
-        requestContainerCreation();
+    @Override
+    protected void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        new Thread(){
+            public void run(){
+                try{
+                    requestAECreation();
+                    requestContainerCreation();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }.start();
+
     }
 
     private void requestAECreation(){
@@ -79,11 +98,15 @@ public class MainActivity extends AppCompatActivity {
             conn.setRequestProperty("X-M2M-Origin", "CAE1");
 
             conn.setDoOutput(true);
+            conn.setDoInput(true);
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
 
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
+            System.out.println(responseCode);
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -121,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
+            System.out.println(responseCode);
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -156,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -191,17 +219,14 @@ public class MainActivity extends AppCompatActivity {
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
             ee.printStackTrace();
         }
     }
-    /**
-     * 주문 버튼 이벤트 처리
-     *
-     * @param view 이벤트 처리 할 view
-     */
 
     public void submitOrder(View view) {
         String name = "Name : " + mNameEditText.getText();
@@ -226,26 +251,32 @@ public class MainActivity extends AppCompatActivity {
         displayMessage(message);
         Toast.makeText(this.getApplicationContext(),"Order is completed.", Toast.LENGTH_SHORT).show();
 
-        sendJsonDataToServer();
+        new Thread(){
+            public void run(){
+                try{
+                    requestCinCreation();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+
         startService(new Intent(getApplicationContext(), GetService.class));
         stopService(new Intent(getApplicationContext(), GetService.class));
     }
 
-    private void sendJsonDataToServer(){
+    private void requestCinCreation(){
         String product = mProductTextView.getText().toString();
-        String quantity = String.valueOf(mQuantity);
         String product2 = mProductTextView2.getText().toString();
-        String quantity2 = String.valueOf(mQuantity2);
-        String name = mNameEditText.getText().toString();
 
         JSONObject jObj = new JSONObject();
         JSONObject tmp = new JSONObject();
         JSONObject jObj2 = new JSONObject();
         try{
             tmp.put("product", product);
-            tmp.put("quantity", quantity);
+            tmp.put("quantity", mQuantity);
             tmp.put("product2", product2);
-            tmp.put("quantity2", quantity2);
+            tmp.put("quantity2", mQuantity2);
             jObj2.put("con", tmp);
             jObj.put("m2m:cin", jObj2);
         } catch(JSONException e1){
@@ -271,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
@@ -307,6 +340,8 @@ public class MainActivity extends AppCompatActivity {
             bw.write(jObj.toString());
             bw.flush();
             bw.close();
+
+            int responseCode = conn.getResponseCode();
         }catch(IOException ie){
             ie.printStackTrace();
         }catch(Exception ee){
