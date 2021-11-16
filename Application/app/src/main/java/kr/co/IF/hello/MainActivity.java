@@ -274,8 +274,10 @@ public class MainActivity extends AppCompatActivity {
         try{
             tmp.put("product", product);
             tmp.put("quantity", mQuantity);
+            tmp.put("price", PRICE_CARROT);
             tmp.put("product2", product2);
             tmp.put("quantity2", mQuantity2);
+            tmp.put("price2", PRICE_COCACOLA);
             jObj2.put("con", tmp);
             jObj.put("m2m:cin", jObj2);
         } catch(JSONException e1){
