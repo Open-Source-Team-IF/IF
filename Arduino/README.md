@@ -1,6 +1,6 @@
 # 로드셀 결선 방법
 ![image](https://user-images.githubusercontent.com/37334007/141078242-3a48a7d0-cde6-49de-849a-1e1b28f48a7f.png)
-![image](https://user-images.githubusercontent.com/37334007/141078256-450aeddf-e222-4477-9d2a-46450a88a5f9.png)
+![image](https://user-images.githubusercontent.com/37334007/142414814-73a9f329-5123-4afa-a630-9bff5e7280c7.png)
 
 ## 로드셀 라이브러리 import
 > HX711.h 파일을 다운로드 후 import
