@@ -1,7 +1,9 @@
 # 로드셀 결선 방법
 > 빨간색과 검은색은 E에 결선하고 초록색과 하얀색은 A에 결선한다.
-![image](https://user-images.githubusercontent.com/37334007/141078242-3a48a7d0-cde6-49de-849a-1e1b28f48a7f.png)
-![image](https://user-images.githubusercontent.com/37334007/142414814-73a9f329-5123-4afa-a630-9bff5e7280c7.png)
+
+
+> ![image](https://user-images.githubusercontent.com/37334007/141078242-3a48a7d0-cde6-49de-849a-1e1b28f48a7f.png)
+> ![image](https://user-images.githubusercontent.com/37334007/142414814-73a9f329-5123-4afa-a630-9bff5e7280c7.png)
 
 ## 로드셀 라이브러리 import
 > HX711.h 파일을 다운로드 후 import
