@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -25,10 +26,10 @@ export default {
   },
   methods: {
     retrieve: function () {
-      this.$http.get("/api/mobius/soldout").then((response) => {
+      axios.get("/api/mobius/soldout").then((response) => {
       this.soldout = response.data;
       });
-    this.$http.get("/api/mobius/error").then((response) => {
+      axios.get("/api/mobius/error").then((response) => {
       this.error = response.data;
       });
     },
