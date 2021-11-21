@@ -393,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
                             conn.setDoInput(true);
 
                             int responseCode = conn.getResponseCode();
-                            System.out.println(responseCode);
 
                             InputStream is = conn.getInputStream();
                             StringBuilder sb = new StringBuilder();
@@ -410,7 +409,7 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject con = m2m.getJSONObject("con");
 
                             int order = (int)con.get("order");
-                            if(order == 1){
+                            if(order == 2){
                                 noti_order();
                                 noti_by_tts();
                                 timer.cancel();
