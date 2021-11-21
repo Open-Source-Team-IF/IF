@@ -76,7 +76,7 @@ void loop(){
       //좌회전
       Bleft();
     }
-    if (digitalRead(L) == HIGH && digitalRead(R) == HIGH && digitalRead(LL) == LOW && digitalRead(RR) == LOW) {
+    if (digitalRead(L) == HIGH && digitalRead(R) == HIGH && digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
       //스탑
       Stop();
     }
