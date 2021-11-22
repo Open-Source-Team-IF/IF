@@ -25,8 +25,8 @@ def create_ae_xml(ae, aei, api):
     if(res.status_code == 201):
         print("Create OK")
  
-# AE 조회 (xml)
-def get_ae_xml(ae, aei):
+# AE 조회
+def get_ae(ae, aei):
     request_headers = {}
     # request_headers['Accept'] = "application/json"
     request_headers['X-M2M-RI'] = "12345"
@@ -76,8 +76,8 @@ def create_cnt_xml(ae, aei, cnt):
     if(res.status_code == 201):
         print("Create OK")   
 
-# CNT 조회 (xml)
-def get_cnt_xml(ae, aei, cnt):
+# CNT 조회
+def get_cnt(ae, aei, cnt):
     request_headers = {}
     # request_headers['Accept'] = "application/json"
     request_headers['X-M2M-RI'] = "12345"
@@ -129,8 +129,8 @@ def create_cin_xml(ae, aei, cnt, data):
     if(res.status_code == 201):
         print("Create OK")   
 
-# cin 조회 (xml)
-def get_cin_xml(ae, aei, cnt):
+# cin 조회
+def get_cin(ae, aei, cnt):
     request_headers = {}
     request_headers['X-M2M-RI'] = "12345"
     request_headers['X-M2M-Origin'] = aei
