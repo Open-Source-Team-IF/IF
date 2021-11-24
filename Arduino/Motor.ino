@@ -41,7 +41,7 @@ void setup(){
 void loop(){
   //Serial.println("L : " + L);
   //Serial.println("R : " + R);
-
+  String ward;
   unsigned long Now = millis();
     
   
@@ -51,15 +51,21 @@ void loop(){
     
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
       Stop();
-      delay(1000);
+      // delay(1000);
       Serial.println("Cross Road Signal Waiting");
-      if(digitalRead(LL) == LOW && digitalRead(RR) == HIGH){
+      while(Serial.available() == 0)
+        ward = Serial.readString();
+      if(ward == "RGT"){
         curveRight();
         delay(400);
       }
-      else if(digitalRead(LL) == HIGH && digitalRead(RR) == LOW){
+      if(ward == "LFT"){
         Bleft();
         delay(400);
+      }
+      if(ward == "STR"){
+        forward();
+        delay(100);
       }
     }
     
@@ -76,7 +82,7 @@ void loop(){
       //좌회전
       Bleft();
     }
-    if (digitalRead(L) == HIGH && digitalRead(R) == HIGH && digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
+    if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
       //스탑
       Stop();
     }
@@ -87,7 +93,7 @@ void loop(){
 }
 
 void forward() {
-  Serial.println("forward");
+  //Serial.println("forward");
   digitalWrite(Ain1, HIGH);
   digitalWrite(Ain2, LOW);
   digitalWrite(Bin1, HIGH);
@@ -97,7 +103,7 @@ void forward() {
 }
 
 void Bright() {
-  Serial.println("right");
+  //Serial.println("right");
   digitalWrite(Ain1, HIGH);
   digitalWrite(Ain2, LOW);
   digitalWrite(Bin1, HIGH);
@@ -107,7 +113,7 @@ void Bright() {
 
 }
 void Bleft() {
-  Serial.println("left");
+  //Serial.println("left");
   digitalWrite(Ain1, HIGH); 
   digitalWrite(Ain2, LOW);
   digitalWrite(Bin1, HIGH);
@@ -117,7 +123,7 @@ void Bleft() {
 
 }
 void Stop() {
-  Serial.println("Stop");
+  //Serial.println("Stop");
   digitalWrite(Ain1, LOW);
   digitalWrite(Ain2, LOW);
   digitalWrite(Bin1, LOW);
@@ -128,11 +134,21 @@ void Stop() {
 }
 
 void curveRight(){
-  Serial.println("right");
+  //Serial.println("right");
   digitalWrite(Ain1, HIGH);
   digitalWrite(Ain2, LOW);
   digitalWrite(Bin1, HIGH);
   digitalWrite(Bin2, LOW);
   analogWrite(enA, pwm-50);
   analogWrite(enB, pwm);
+}
+
+void curveLeft(){
+  //Serial.println("right");
+  digitalWrite(Ain1, HIGH);
+  digitalWrite(Ain2, LOW);
+  digitalWrite(Bin1, HIGH);
+  digitalWrite(Bin2, LOW);
+  analogWrite(enA, pwm);
+  analogWrite(enB, pwm-50);
 }
