@@ -10,12 +10,6 @@ char* password = "t1v0r20!^";
 String serverName = "http://146.56.166.36:7579/Mobius";
 String Name = "/cart1";
 
-unsigned long lastTime = 0;
-
-unsigned long timerDelay = 5000;
-
-unsigned long Next_Setted_Time = 0;
-
 String stat = "waiting";
 
 String jsonParse(String str, String findstr){
