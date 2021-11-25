@@ -19,7 +19,7 @@ int Delay = 10;
 int Time = 0;
 int TURN_DELAY = 400;
 
-String stat = "stop";
+String stat = "waiting";
 
 void get_startSignal(){
   while(1){
@@ -86,15 +86,17 @@ void setup(){
   pinMode(enA, OUTPUT); //오른쪽 모터 속도제어
   pinMode(enB, OUTPUT); //왼쪽 모터 속도제어
 
+  get_startSignal();
 }
 
 void loop(){
   unsigned long Now = millis();
-  
-  if(stat.equals("cross")){
+  // cross = 교차로 도달, moving = 라인 트레이싱, stand = 멈춤 : 세 가지 상태에 따른 동작 구현
+  if(stat.equals("get_route")){
     Stop();
     Serial.println("I'm in Cross"); //debug
-    String Direction = "CrossWaiting";
+    Serial.println("get_route"); 
+    String Direction = "CrossWaiting"; // init
     while(1){
       Direction = Serial.readStringUntil('\n');
       Direction.trim();
@@ -125,43 +127,41 @@ void loop(){
     Serial.println("I'm in moving");
     // 스탑 또는 교차로 판단
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
-    Stop();
+      Stop();
       if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
-        stat = "stop";
-        Serial.println("Stop Mark"); // 가장 왼쪽/오른쪽 센서 활성화 시 스탑으로 인식 //debug
+        stat = "stand";
+        Serial.println("Stop Mark"); // 가장 왼쪽/오른쪽 센서 동시에 활성화 시 진열대로 간주하고 스탑으로 인식 //debug
       }
       else{
       // 가장 왼쪽 또는 오른쪽 센서 활성화 시 교차로로 인식 
-        Serial.println("CrossRoad"); 
-        stat = "cross";
+        stat = "get_route";
       }
     }  
-    if(Now >= Time){
-      // 라인트레이싱 코드
-      if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
-        //직진
-        forward();
-        Serial.println("Loop Forward"); //debug
-      }
-      if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
-        //우회전
-        Bright();
-        Serial.println("Loop right turn"); //debug
-      }
-      if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
-        //좌회전
-        Bleft();
-        Serial.println("Loop left turn"); //debug
-      }
-      if(Now >= Time+Delay){
-        Time += Delay*1; // 딜레이 설정용, 계수를 맞춰서 딜레이 조절이 가능
-      }
+    // 라인트레이싱 코드
+    if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
+      //직진
+      forward();
+      Serial.println("Loop Forward"); //debug
+    }
+    if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
+      //우회전
+      Bright();
+      Serial.println("Loop right turn"); //debug
+    }
+    if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
+      //좌회전
+      Bleft();
+      Serial.println("Loop left turn"); //debug
+    }
+    if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
+      // 중앙 두 센서만 활성화 시 완전 가동 중지
+      Stop();
+      stat = "stop";
     }
   }
-  if(stat.equals("stop")){
-    Serial.println("I'm in stop"); //debug
-    Serial.println("Stop");
-    stat = "stop";
+  if(stat.equals("stand")){
+    Serial.println("I'm in stand"); //debug
+    Serial.println("stand");
     get_startSignal();
   }
 }
