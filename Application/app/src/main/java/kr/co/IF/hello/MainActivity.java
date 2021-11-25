@@ -293,9 +293,9 @@ public class MainActivity extends AppCompatActivity {
         JSONObject tmp = new JSONObject();
         JSONObject jObj2 = new JSONObject();
         try{
-            tmp.put("product", product);
-            tmp.put("quantity", mQuantity);
-            tmp.put("price", PRICE_CARROT);
+            tmp.put("product1", product);
+            tmp.put("quantity1", mQuantity);
+            tmp.put("price1", PRICE_CARROT);
             tmp.put("product2", product2);
             tmp.put("quantity2", mQuantity2);
             tmp.put("price2", PRICE_COCACOLA);
