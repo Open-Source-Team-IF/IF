@@ -1,0 +1,38 @@
+﻿AE,CNT,type,cin,비고
+앱(app1),주문목록(user1/product),json,"{""product"" : ""item1"" , ""quantity"" : ""3"", ""product2"" : ""item2"" , ""quantity2"" : ""1""}",
+,주문완료(user1/order),json,"{""order"" : [0 or 1]}","주문시 0으로 설정 / 카트가 도착지점에 도착시 1로 설정
+>> 주문시 0으로 설정 / 주문 접수시 1로 설정 / 카트가 도착지점에 도착시 2로 설정"
+,주문자정보(user1),json,"{""userid"" : ???}",
+카트(cart1),가야할방향(direction),xml,"직진 {""STR""} or 좌회전 {""LFT""} or 우회전 {""RGT""}","교차로 도착시 서버에서 가야할 방향 설정
+서버에서 카트의 status검사시, get_route면 장애물을 고려하여 경로를 다시 계산함.
+경로를 계산하여 가야할 방향을 알려줌.
+이후 카트의 status를 get_route → moving으로 갱신함."
+,"출발지(starting)
+- 없애기로 결정",xml,"교차로A {""A""}","출발지 - 현재위치 - 다음경로 를 통해 가야할 방향을 알기위해 존재함
+- 서버 -
+교차로에서 : 가야할 방향을 알려주고 출발지를 현재 교차로로 갱신함
+진열대에서 : 현재 설정된 경로를 확인하고 현재 카트가 있는 진열대로 갱신함
+- 카트 -
+카트에서는 starting 컨테이너 신경쓸 필요 x
+이제 생각해보니 없어도 댈듯?
+- 삭제하기로 결정"
+,목적지(dest),xml,진열대1 {'1'},"app1/user1/product 에서 설정
+get_route해서 더 적은 거리가 나오는 목표를 목적지로 설정"
+,담긴물건,xml,item1 or item2,진열대에서 무게변화감지시 제품 추가
+,status,xml,서버에 경로 요청 - {get_route} or 이동중 - {moving} or 물품 적재중,"적외선 수신센서 작동여부로 판단,
+출발전 : waiting
+주문시:(서버에서 갱신) waiting → moving
+교차로 정차시 : (카트에서 갱신)moving → get_route
+진열대 정차시 : (카트에서 갱신)moving → stand, 서버에 진열대 정차했다고 전송, 서버에서 출발지(현재위치)를 현재 정차한 진열대로 갱신해줌
+목표한 목적지 진열대 도착시 : (서버에서 갱신)stand → loading
+진열대에서 물품 적재했다고 알림 and 물품 적재 완료시 : (서버에서 갱신)loading→ moving
+서버에서 가야할 방향 설정후 : (서버에서 갱신)get_route → moving, 카트는 moving으로 바뀐것을 확인하면, direction을 확인하여 올바른 방향으로 진행함"
+진열대(stand1),레일동작(rail),xml,0 or 1 or 2,"카트가 진열대에 도착시 서버에서 or 무게센서에서 무게변화감지시
+서버에서 : cart1/status 가 moving → loading로 바뀌면, stand1/rail을 0 → 1로 바꿈
+진열대에서 : rail이 0 → 1이 되는것을 확인하면 컨베이어벨트 동작시킴
+진열대에서 : 무게변화 감지시, rail을 1 → 2으로 바꿈
+서버에서 : stand1/rail이 1 → 2가 된 것을 확인하면 카트에 물품이 적재되었다고 알리고, 2 → 0으로 바꿈"
+server,오류 목록,xml,진열대1,진열대와 카트에서 오류 모아놈
+,매진 목록,xml,당근,재고가 0인 물품을 모아놈
+,물품 목록,json,"{""""product"": ~,""price"": ~, ""quantitiy"": ~, ""stand"": ~}",등록된 물품 목록
+,장애물(closed),json,"{'1' : 'closed', '2' : 'free', '3' : 'free', '4' : 'free', '5' : .... ""6' ...}",
