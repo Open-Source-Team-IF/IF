@@ -25,26 +25,32 @@ String jsonParse(String str, String findstr){
 }
 
 
-void getWard(){
-  String ward;
-  Serial.println("getting ward");
+void getDirection(){
+  String Direction;
+  Serial.println("getting Direction");
   if(WiFi.status() == WL_CONNECTED){
-    HTTPClient http;
-    http.begin(serverName + Name + "/direction/la");
-    http.addHeader("Content-Type", "application/json");
-    http.addHeader("X-M2M-RI","/Mobius");
-    http.addHeader("X-M2M-Origin","SOrigin");
-    int httpResponseCode = http.GET();
-    if(httpResponseCode == 200){
-      String payload = http.getString();
-      ward = jsonParse(payload, "con");
-      Serial.println("Q"+ward); //debug용 
+    while(1){
+      HTTPClient http;
+      http.begin(serverName + Name + "/direction/la");
+      http.addHeader("Content-Type", "application/json");
+      http.addHeader("X-M2M-RI","/Mobius");
+      http.addHeader("X-M2M-Origin","SOrigin");
+      int httpResponseCode = http.GET();
+      if(httpResponseCode == 200){
+        String payload = http.getString();
+        Direction = jsonParse(payload, "con");
+        if(Direction.equals("LFT") || Direction.equals("RGT") || Direction.equals("STR")){
+          Serial.println(Direction);
+          http.end();
+          break;
+        }
+      }
+      else{
+        Serial.println("Response Code is not 200 !!");
+      }
+     http.end();
     }
-    else{
-      Serial.println("Response Code is not 200 !!");
-    }
-    http.end();
-  }   
+  }
 }
 
 int startSignal(){
@@ -57,9 +63,9 @@ int startSignal(){
     int httpResponseCode = http.GET();
     if(httpResponseCode == 200){
       String payload = http.getString();
-      flag = jsonParse(payload, "con");
-      if(flag == "moving")
-        Serial.println("G");
+      stat = jsonParse(payload, "con");
+      if(stat.equals("moving"))
+        Serial.println("Go");
     }
     else{
       Serial.println("Response Code is not 200 !!");
@@ -79,27 +85,21 @@ void setup() {
     delay(500);
     //Serial.print(".");
   }
-  //Serial.println("");
-  //Serial.print("Connected to WiFi network with IP Address: ");
-  //Serial.println(WiFi.localIP());
-  //Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
+  /* debug
+  Serial.println("");
+  Serial.print("Connected to WiFi network with IP Address: ");
+  Serial.println(WiFi.localIP());
+  Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
+  */
 }
 
 void loop() {
       if(stat == "moving"){
         if(Serial.available()){
-          //Serial.println("node MCU");
           String temp = Serial.readStringUntil('\n');
-          //Serial.println("temp : " + temp);
-          if(temp[0] == 'C'){
-            if(temp[1] == 'B'){
-              getWard();  
-            }
-          }
-          if(temp[0] == 'S'){
-            if(temp[1] == 'P'){
-              flag == "stop";
-            }
+          temp.trim();
+          if(temp.equals("CrossRoad")) getDirection();
+          if(temp.equals("Stop")) stat = "stop";
           }
         }
       }
