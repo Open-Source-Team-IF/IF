@@ -18,6 +18,50 @@ String jsonParse(String str, String findstr){
   return str.substring(index, index2);
 }
 
+void sendStopSignal(){
+  
+  if(WiFi.status()== WL_CONNECTED){
+    HTTPClient http;  
+    int httpResponseCode = 400;
+    while(httpResponseCode != 201){
+      http.begin(serverName + "/" + Name + "/status");
+      http.addHeader("Content-Type", "application/vnd.onem2m-res+xml;ty=4");
+      http.addHeader("X-M2M-RI", "adnae/1234");
+      http.addHeader("X-M2M-Origin", Name);
+      String httpRequestData = "";
+      httpRequestData += "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">\n";
+      httpRequestData += "<con>stand</con>";
+      httpRequestData += "</m2m:cin>";
+      //Serial.println(httpRequestData);
+      httpResponseCode = http.POST(httpRequestData);
+      // Free resources
+      http.end();
+    }
+  }
+  
+}
+
+void sendCrossRoadSignal(){
+  
+  if(WiFi.status()== WL_CONNECTED){
+    HTTPClient http;  
+    int httpResponseCode = 400;
+    while(httpResponseCode != 201){
+      http.begin(serverName + "/" + Name + "/status");
+      http.addHeader("Content-Type", "application/vnd.onem2m-res+xml;ty=4");
+      http.addHeader("X-M2M-RI", "adnae/1234");
+      http.addHeader("X-M2M-Origin", Name);
+      String httpRequestData = "";
+      httpRequestData += "<m2m:cin xmlns:m2m=\"http://www.onem2m.org/xml/protocols\">\n";
+      httpRequestData += "<con>get_route</con>";
+      httpRequestData += "</m2m:cin>";
+      //Serial.println(httpRequestData);
+      httpResponseCode = http.POST(httpRequestData);
+      // Free resources
+      http.end();
+    }
+  }
+}
 
 void getDirection(){
   String Direction;
@@ -65,9 +109,7 @@ int startSignal(){
       Serial.println("Response Code is not 200 !!");
     }
     http.end();
-  }   
-
-  
+  }    
 }
 
 void setup() {
@@ -92,8 +134,13 @@ void loop() {
         if(Serial.available()){
           String temp = Serial.readStringUntil('\n');
           temp.trim();
-          if(temp.equals("CrossRoad")) getDirection();
-          if(temp.equals("Stop")) stat = "stop";
+          if(temp.equals("get_route")){
+            sendCrossRoadSignal();
+            getDirection();
+          }
+          if(temp.equals("stand")){
+            stat = "stand";
+            sendStopSignal();
           }
         }
       }
