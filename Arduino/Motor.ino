@@ -23,14 +23,12 @@ String stat = "stop";
 
 void get_startSignal(){
   while(1){
-    if(Serial.available()){
-      String temp = Serial.readStringUntil("\n");
-      temp.trim();
-      //Serial.println("temp" + temp); //debug
-      if(temp.equals("Go")){
-        stat = "moving";
-        break;
-      }
+    String temp = Serial.readStringUntil("\n");
+    temp.trim();
+    //Serial.println("temp" + temp); //debug
+    if(temp.equals("Go")){
+      stat = "moving";
+      break;
     }
   }
 }
@@ -127,17 +125,15 @@ void loop(){
     Serial.println("I'm in moving");
     // 스탑 또는 교차로 판단
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
+    Stop();
       if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
-        Stop();
         stat = "stop";
         Serial.println("Stop Mark"); // 가장 왼쪽/오른쪽 센서 활성화 시 스탑으로 인식 //debug
       }
       else{
       // 가장 왼쪽 또는 오른쪽 센서 활성화 시 교차로로 인식 
-        Stop();
         Serial.println("CrossRoad"); 
         stat = "cross";
-        delay(500);
       }
     }  
     if(Now >= Time){
