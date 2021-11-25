@@ -129,14 +129,19 @@ void loop(){
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
       Stop();
       if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
-        stat = "stand";
-        Serial.println("Stop Mark"); // 가장 왼쪽/오른쪽 센서 동시에 활성화 시 진열대로 간주하고 스탑으로 인식 //debug
+        if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
+          stat = "get_route"; // 세 갈래길
+        }
+        else{
+          stat = "stand";
+          Serial.println("Stop Mark"); // 가장 왼쪽/오른쪽 센서 동시에 활성화 시 진열대로 간주하고 스탑으로 인식 //debug
+        }
       }
       else{
       // 가장 왼쪽 또는 오른쪽 센서 활성화 시 교차로로 인식 
         stat = "get_route";
       }
-    }  
+    }
     // 라인트레이싱 코드
     if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
       //직진
