@@ -12,12 +12,12 @@ export default new Router({
       component: () => import('@/views/dashboard/Index'),
       children: [
         {
-          name: '대시보드',
+          name: '현황',
           path: '',
           component: () => import('@/views/dashboard/Dashboard'),
         },
         {
-          name: '물품 관리  ',
+          name: '물품 관리',
           path: 'pages/user',
           component: () => import('@/views/dashboard/pages/product'),
         },
