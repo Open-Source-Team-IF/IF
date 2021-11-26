@@ -115,7 +115,7 @@ import axios from "axios";
           "X-M2M-Origin": "S",
           "Content-Type": "application/vnd.onem2m-res+json;ty=4"
         };
-        const url = "http://146.56.166.36:7579/Mobius/server/product";
+        const url = "http://146.56.166.36:7579/Mobius/web/product";
 
         query = {product: this.product, price:this.price, quantity:this.quantity, stand:this.stand}
         const body = {
