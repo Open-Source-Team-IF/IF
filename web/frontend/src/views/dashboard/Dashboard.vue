@@ -1,15 +1,10 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col
-        cols="12"
-        md="6"
-      >
+      <v-col cols="12" md="6">
         <base-material-card class="px-5 py-3">
           <template #heading>
-            <div class="text-h3 font-weight-light">
-              <p align="center" style="margin:0;padding:0;">물품별 재고 현황</p>
-            </div>
+              <p class="text-h3 font-weight-light" align="center">물품별 재고 현황</p>
           </template>
           <v-card-text>
             <v-data-table
@@ -19,14 +14,8 @@
           </v-card-text>
         </base-material-card>
       </v-col>
-      <v-col
-        cols="12"
-        md="6"
-      >
-        <base-material-card
-          color="warning"
-          class="px-5 py-3"
-        >
+      <v-col cols="12" md="6">
+        <base-material-card color="warning" class="px-5 py-3">
           <template #heading>
             <v-tabs
               v-model="tabs"
@@ -40,32 +29,20 @@
               <v-tab class="mr-4">
                 오류목록
               </v-tab>
-              <v-tab >
+              <v-tab>
                 재고부족
               </v-tab>
             </v-tabs>
           </template>
 
-          <v-tabs-items
-            v-model="tabs"
-            class="transparent"
-          >
-            <v-tab-item
-              v-for="n in 2"
-              :key="n"
-            >
+          <v-tabs-items v-model="tabs">
+            <v-tab-item v-for="n in 2" :key="n">
               <v-card-text>
                 <template v-for="(task, i) in tasks[tabs]">
-                  <v-row
-                    :key="i"
-                    align="center"
-                  >
-                      <div v-text="task"/>
+                  <v-row :key="i" align="center">
+                    <div v-text="task"/>
                     <v-col class="text-right">
-                    <v-icon
-                      small
-                      @click="deleteItem(task)"
-                    >
+                    <v-icon small @click="deleteItem(task)">
                     mdi-delete
                     </v-icon>
                     </v-col>
@@ -77,37 +54,26 @@
         </base-material-card>
       </v-col>
 
-      <v-col
-        cols="12"
-        md="6"
-      >
+      <v-col cols="12" md="6">
         <base-material-chart-card
           :data="dailySalesChart.data"
           :options="dailySalesChart.options"
           color="success"
-          hover-reveal
           type="Line"
         >
-          <h4 class="card-title font-weight-light mt-2 ml-2">
-            매출동향
-          </h4>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            <v-icon
-              color="green"
-              small
-            >
-              mdi-arrow-up
-            </v-icon>
-            <span class="green--text">55%</span>&nbsp;
-          </p>
+        <h4 class="card-title font-weight-light mt-2 ml-2">
+          매출동향
+        </h4>
+        <p class="d-inline-flex font-weight-light ml-2 mt-1">
+          <v-icon color="green" small>
+            mdi-arrow-up
+          </v-icon>
+          <span class="green--text">55%</span>&nbsp;
+        </p>
         </base-material-chart-card>
       </v-col>
 
-      <v-col
-        cols="12"
-        md="4"
-      >
+      <v-col cols="12" md="4">
         <base-material-stats-card
           color="success"
           icon="mdi-store"
@@ -116,48 +82,24 @@
         />
       </v-col>
 
-      <v-col
-        cols="12"
-        md="2"
-      >
+      <v-col cols="12" md="2">
         <base-material-card class="px-5 py-1">
           <template #heading>
-              <p align="center" style="margin:0;padding:0;">카트현황</p>
+            <p align="center">카트현황</p>
           </template>
-      <v-sheet class="py-2" >
-        <v-switch
-        v-model="onoff[0]"
-        dense
-        inset
-        readonly
-        >
-        <template v-slot:label>
-          <span class="input__label" style="color:black">카트1</span>
-          </template>
-        </v-switch>
-        <v-switch
-        v-model="onoff[1]"
-        dense
-        inset
-        readonly
-        >
-        <template v-slot:label>
-          <span class="input__label" style="color:black">카트2</span>
-          </template>
-        </v-switch>
-        <v-switch
-        v-model="onoff[2]"
-        inset
-        dense
-        readonly
-        >
-        <template v-slot:label>
-          <span class="input__label" style="color:black">카트3</span>
-          </template>
-        </v-switch>
-
-      </v-sheet>
-      </base-material-card>
+          <v-sheet class="py-2" v-for="(n,index) in onoff" :key="index">
+            <v-switch
+              v-model="onoff[index]"
+              dense
+              inset
+              readonly
+            >
+            <template v-slot:label>
+              <span style="color:black">카트{{Number(index)+1}}</span>
+            </template>
+            </v-switch>
+          </v-sheet>
+        </base-material-card>
       </v-col>
     </v-row>
   </v-container>
@@ -165,11 +107,7 @@
 
 <script>
 import axios from 'axios'
-import VComponent from '../../../../../IF/web/frontend/src/components/base/VComponent.vue'
   export default {
-  components: { VComponent },
-    name: 'DashboardDashboard',
-
     data () {
       return {
         dailySalesChart: {
@@ -195,27 +133,20 @@ import VComponent from '../../../../../IF/web/frontend/src/components/base/VComp
         },
         headers: [
           {
-            sortable: false,
             text: '물품',
             value: 'product',
           },
           {
-            sortable: false,
             text: '가격',
             value: 'price',
-            align: 'right',
           },
           {
-            sortable: false,
             text: '수량',
             value: 'quantity',
-            align: 'right',
           },
           {
-            sortable: false,
             text: 'Location',
             value: 'stand',
-            align: 'right',
           },
         ],
         items: [],
@@ -233,7 +164,7 @@ import VComponent from '../../../../../IF/web/frontend/src/components/base/VComp
         dailysales:''
       }
     },
-
+    // 정보를 가져오는 retrieve 함수를 10초마다 실행
     mounted() {
       this.retrieve()
       setInterval(this.retrieve,10000);
@@ -243,6 +174,8 @@ import VComponent from '../../../../../IF/web/frontend/src/components/base/VComp
         this.items = []
         this.tasks[0] = []
         this.tasks[1] = []
+
+        // 물품별 재고 현황
         await axios.get('/api/mobius/list').then((response) => {
           this.list = response.data
         })
@@ -250,6 +183,7 @@ import VComponent from '../../../../../IF/web/frontend/src/components/base/VComp
           this.items.push(JSON.parse(this.list[i].con))
         }
 
+        // 오류 목록 및 재고 부족 현황
         await axios.get("/api/mobius/error").then((response) => {
           this.error = response.data;
         })
@@ -264,37 +198,48 @@ import VComponent from '../../../../../IF/web/frontend/src/components/base/VComp
         }
 
         const headers = {
-        "X-M2M-RI": "12345",
-        "X-M2M-Origin": "S",
-        "Accept": "application/json"
+          "X-M2M-RI": "12345",
+          "X-M2M-Origin": "S",
+          "Accept": "application/json"
         }
 
+        // 일매출 데이터
         const url = "http://146.56.166.36:7579/Mobius/server/dailysales/la"
         await axios.get(url, { headers }).then((response) => {
-            var arr = JSON.stringify(response.data)
-            arr = JSON.parse(arr.slice(11,arr.length-1))
-            this.dailysales = JSON.parse(JSON.stringify(arr.con))
+          var arr = JSON.stringify(response.data)
+          arr = JSON.parse(arr.slice(11,arr.length-1))
+          this.dailysales = JSON.parse(JSON.stringify(arr.con))
         })
 
+        // 카트 현황
         for(var idx = 1; idx < 4; idx++) {
           const url = "http://146.56.166.36:7579/Mobius/cart"+idx+"/status/la"
           await axios.get(url, { headers }).then((response) => {
             var arr = JSON.stringify(response.data)
             arr = JSON.parse(arr.slice(11,arr.length-1))
             arr = JSON.parse(JSON.stringify(arr.con))
-            if(arr!="waiting") {
+            if(arr !="waiting") {
               this.onoff[idx-1]=true
             }
           })
         }
       },
+
+      // 오류 목록 및 재고 부족 현황 삭제 기능
       async deleteItem (task) {
         await axios.post("/api/mobius/check", {
           task: task
         });
-        alert('삭제완료')
-        this.retrieve();
+          alert('삭제완료')
+          this.retrieve();
+        },
       },
-    },
   }
 </script>
+
+<style scoped>
+p{
+  margin:0;
+  padding:0;
+}
+</style>
