@@ -1,10 +1,7 @@
 <template>
   <v-container fluid>
   <v-row justify="center">
-    <v-col
-      cols="12"
-      md="10"
-    >
+    <v-col cols="12" md="10">
     <base-material-card
       icon="mdi-clipboard-text"
       title="주문 조회"
@@ -13,37 +10,21 @@
     <v-form>
       <v-container class="py-0">
         <v-row>
-          <v-col
-            cols="12"
-            md="6"
-          >
-         <v-text-field
-           label="사용자"
-           v-model="user"
-          />
+          <v-col cols="12" md="6">
+            <v-text-field label="사용자" v-model="user"/>
           </v-col>
 
-          <v-col
-            cols="12"
-            md="3"
-          >
-          <v-btn
-            class="btn"
-            color="success"
-            v-on:click="retrieve"
-          >
+          <v-col cols="12" md="3">
+          <v-btn color="success" v-on:click="retrieve">
           조회
           </v-btn>
           </v-col>
           <p style="font-size:20px"><br>{{result}}</p>
 
-          <v-col
-            cols="12"
-            md="12"
-          >
+          <v-col cols="12">
           <v-simple-table>
             <thead>
-              <tr >
+              <tr>
                 <th class="primary--text">
                   물품
                 </th>
@@ -57,7 +38,7 @@
             </thead>
 
             <tbody>
-              <tr v-for="n in current.length/3" v-bind:key="n">
+              <tr v-for="n in list1.length" :key="n">
               <td>{{list1[n-1]}} </td>
               <td>{{list3[n-1]}} </td>
               <td>{{list2[n-1]}} </td>
@@ -83,36 +64,36 @@ export default {
       list2:[],
       list3:[],
       user: '',
-      current:'',
       total:'',
       result:''
     }
   },
   methods: {
+    // 주문 조회 함수
     retrieve() {
       this.result='';
       this.total = 0;
+
       const headers = {
         "X-M2M-RI": "12345",
         "X-M2M-Origin": "S",
         "Accept": "application/json"
       };
+      const url = "http://146.56.166.36:7579/Mobius/app1/"+this.user+"/product/la"
 
-      const url = "http://146.56.166.36:7579/Mobius/app1/"+this.user+"/product/la";
-        axios.get(url, { headers }).then((response) => {
-          var arr = JSON.stringify(response.data)
-          arr = JSON.parse(arr.slice(11,arr.length-1))
-          arr = Object.values(JSON.parse(JSON.stringify(arr.con)))
-          this.current = arr;
-          for (var i = 0; i < arr.length; i += 3) {
-            this.list1.push(arr[i]);
-            this.list2.push(arr[i+1]);
-            this.list3.push(arr[i+2]);
-            this.total += arr[i+1] * arr[i+2];
-          }
-          this.result = '총액 : ' + this.total + '원'
-        });
-
+      // 물품, 수량, 가격에 대한 데이터를 잘라 각각의 리스트에 push
+      axios.get(url, { headers }).then((response) => {
+        var arr = JSON.stringify(response.data)
+        arr = JSON.parse(arr.slice(11,arr.length-1))
+        arr = Object.values(JSON.parse(JSON.stringify(arr.con)))
+        for (var i = 0; i < arr.length; i += 3) {
+          this.list1.push(arr[i]);
+          this.list2.push(arr[i+1]);
+          this.list3.push(arr[i+2]);
+          this.total += arr[i+1] * arr[i+2];
+        }
+        this.result = '총액 : ' + this.total + '원'
+      });
     },
   },
 }
