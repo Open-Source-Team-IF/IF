@@ -24,7 +24,7 @@ void sendStopSignal(){
     HTTPClient http;  
     int httpResponseCode = 400;
     while(httpResponseCode != 201){
-      http.begin(serverName + "/" + Name + "/status");
+      http.begin(serverName + Name + "/status");
       http.addHeader("Content-Type", "application/vnd.onem2m-res+xml;ty=4");
       http.addHeader("X-M2M-RI", "adnae/1234");
       http.addHeader("X-M2M-Origin", Name);
@@ -47,7 +47,7 @@ void sendCrossRoadSignal(){
     HTTPClient http;  
     int httpResponseCode = 400;
     while(httpResponseCode != 201){
-      http.begin(serverName + "/" + Name + "/status");
+      http.begin(serverName + Name + "/status");
       http.addHeader("Content-Type", "application/vnd.onem2m-res+xml;ty=4");
       http.addHeader("X-M2M-RI", "adnae/1234");
       http.addHeader("X-M2M-Origin", Name);
