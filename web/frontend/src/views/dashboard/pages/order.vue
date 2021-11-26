@@ -110,7 +110,7 @@ export default {
             this.list3.push(arr[i+2]);
             this.total += arr[i+1] * arr[i+2];
           }
-          this.result = '총합 : ' + this.total + '원'
+          this.result = '총액 : ' + this.total + '원'
         });
 
     },

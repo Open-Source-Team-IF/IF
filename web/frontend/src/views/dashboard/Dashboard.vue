@@ -8,7 +8,7 @@
         <base-material-card class="px-5 py-3">
           <template #heading>
             <div class="text-h3 font-weight-light">
-              재고 상황
+              <p align="center" style="margin:0;padding:0;">물품별 재고 현황</p>
             </div>
           </template>
           <v-card-text>
@@ -36,14 +36,12 @@
               <span
                 class="subheading font-weight-light mx-3"
                 style="align-self: center"
-              >Tasks:</span>
-              <v-tab class="mr-3">
-                <v-icon class="mr-1">
-                </v-icon>
-                오류
+              >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span>
+              <v-tab class="mr-4">
+                오류목록
               </v-tab>
-              <v-tab class="mr-1">
-                재고
+              <v-tab >
+                재고부족
               </v-tab>
             </v-tabs>
           </template>
@@ -62,11 +60,14 @@
                     :key="i"
                     align="center"
                   >
-                    <v-col cols="9">
-                      <div
-                        class="font-weight-light"
-                        v-text="task"
-                      />
+                      <div v-text="task"/>
+                    <v-col class="text-right">
+                    <v-icon
+                      small
+                      @click="deleteItem(task)"
+                    >
+                    mdi-delete
+                    </v-icon>
                     </v-col>
                   </v-row>
                 </template>
@@ -78,7 +79,7 @@
 
       <v-col
         cols="12"
-        lg="4"
+        md="6"
       >
         <base-material-chart-card
           :data="dailySalesChart.data"
@@ -88,7 +89,7 @@
           type="Line"
         >
           <h4 class="card-title font-weight-light mt-2 ml-2">
-            일별 매출
+            매출동향
           </h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
@@ -105,25 +106,68 @@
 
       <v-col
         cols="12"
-        sm="6"
-        lg="3"
+        md="4"
       >
         <base-material-stats-card
           color="success"
           icon="mdi-store"
-          title="매출"
-          value="134,000원"
-          sub-icon="mdi-calendar"
-          sub-text="Last 24 Hours"
+          title="일매출"
+          v-bind:value="dailysales"
         />
+      </v-col>
+
+      <v-col
+        cols="12"
+        md="2"
+      >
+        <base-material-card class="px-5 py-1">
+          <template #heading>
+              <p align="center" style="margin:0;padding:0;">카트현황</p>
+          </template>
+      <v-sheet class="py-2" >
+        <v-switch
+        v-model="onoff[0]"
+        dense
+        inset
+        readonly
+        >
+        <template v-slot:label>
+          <span class="input__label" style="color:black">카트1</span>
+          </template>
+        </v-switch>
+        <v-switch
+        v-model="onoff[1]"
+        dense
+        inset
+        readonly
+        >
+        <template v-slot:label>
+          <span class="input__label" style="color:black">카트2</span>
+          </template>
+        </v-switch>
+        <v-switch
+        v-model="onoff[2]"
+        inset
+        dense
+        readonly
+        >
+        <template v-slot:label>
+          <span class="input__label" style="color:black">카트3</span>
+          </template>
+        </v-switch>
+
+      </v-sheet>
+      </base-material-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
+import VComponent from '../../../../../IF/web/frontend/src/components/base/VComponent.vue'
   export default {
+  components: { VComponent },
     name: 'DashboardDashboard',
 
     data () {
@@ -184,7 +228,9 @@
         },
         list: {},
         soldout:[],
-        error:[]
+        error:[],
+        onoff:{0:false,1:false,2:false},
+        dailysales:''
       }
     },
 
@@ -194,28 +240,60 @@
     },
     methods: {
       async retrieve () {
-        this.items = [];
+        this.items = []
         this.tasks[0] = []
         this.tasks[1] = []
         await axios.get('/api/mobius/list').then((response) => {
           this.list = response.data
-        });
+        })
         for(var i = 0; i < this.list.length; i++){
           this.items.push(JSON.parse(this.list[i].con))
         }
 
         await axios.get("/api/mobius/error").then((response) => {
           this.error = response.data;
-        });
+        })
         for(var j = 0; j < this.error.length; j++){
           this.tasks[0].push(this.error[j].con)
         }
         await axios.get("/api/mobius/soldout").then((response) => {
           this.soldout = response.data;
-        });
+        })
         for(var k = 0; k < this.soldout.length; k++){
           this.tasks[1].push(this.soldout[k].con)
         }
+
+        const headers = {
+        "X-M2M-RI": "12345",
+        "X-M2M-Origin": "S",
+        "Accept": "application/json"
+        }
+
+        const url = "http://146.56.166.36:7579/Mobius/server/dailysales/la"
+        await axios.get(url, { headers }).then((response) => {
+            var arr = JSON.stringify(response.data)
+            arr = JSON.parse(arr.slice(11,arr.length-1))
+            this.dailysales = JSON.parse(JSON.stringify(arr.con))
+        })
+
+        for(var idx = 1; idx < 4; idx++) {
+          const url = "http://146.56.166.36:7579/Mobius/cart"+idx+"/status/la"
+          await axios.get(url, { headers }).then((response) => {
+            var arr = JSON.stringify(response.data)
+            arr = JSON.parse(arr.slice(11,arr.length-1))
+            arr = JSON.parse(JSON.stringify(arr.con))
+            if(arr!="waiting") {
+              this.onoff[idx-1]=true
+            }
+          })
+        }
+      },
+      async deleteItem (task) {
+        await axios.post("/api/mobius/check", {
+          task: task
+        });
+        alert('삭제완료')
+        this.retrieve();
       },
     },
   }

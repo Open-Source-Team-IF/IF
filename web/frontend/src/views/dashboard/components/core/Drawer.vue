@@ -73,7 +73,7 @@
       items: [
         {
           icon: 'mdi-view-dashboard',
-          title: '대시보드',
+          title: '현황',
           to: '/',
         },
         {

@@ -8,7 +8,7 @@
         <base-material-card>
           <template #heading>
             <div class="text-h3 font-weight-light">
-              물품 등록
+              <p align="center" style="margin:0;padding:0;">물품 등록</p>
             </div>
           </template>
 
@@ -85,7 +85,7 @@
       <base-material-card color="warning">
           <template #heading>
             <div class="text-h3 font-weight-light">
-              물품 삭제
+              <p align="center" style="margin:0;padding:0;">물품 삭제</p>
             </div>
           </template>
           <v-form>
