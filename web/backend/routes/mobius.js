@@ -47,4 +47,15 @@ router.post('/delete', function(req, res, next) {
   });
 });
 
+router.post('/check', function(req, res, next) {
+  connection.query('DELETE FROM cin WHERE (pi="/Mobius/server/error" OR pi="/Mobius/server/soldout") AND con like "%'+req.body.task+'%"', (error, rows, fields) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Internal Server Error');
+    }
+    console.log(': ', rows);
+    res.send(rows);
+  });
+});
+
 module.exports = router;
