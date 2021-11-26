@@ -42,7 +42,7 @@
                   <v-row :key="i" align="center">
                     <div v-text="task"/>
                     <v-col class="text-right">
-                    <v-icon small @click="deleteItem(task)">
+                    <v-icon small @click="delerr(task)">
                     mdi-delete
                     </v-icon>
                     </v-col>
@@ -226,8 +226,8 @@ import axios from 'axios'
       },
 
       // 오류 목록 및 재고 부족 현황 삭제 기능
-      async deleteItem (task) {
-        await axios.post("/api/mobius/check", {
+      async delerr (task) {
+        await axios.post("/api/mobius/delerr", {
           task: task
         });
           alert('삭제완료')
