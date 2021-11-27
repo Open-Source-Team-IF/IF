@@ -159,21 +159,23 @@ void loop(){
           stat = "get_route";
         }
     }
-    if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
-      forward();
-      Serial.println("Loop Forward"); //debug
-    }
-    if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
-      Bright();
-      Serial.println("Loop right turn"); //debug
-    }
-    if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
-      Bleft();
-      Serial.println("Loop left turn"); //debug
-    }
-    if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
-      Stop();
-      stat = "stop";
+    else{
+      if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
+        forward();
+        Serial.println("Loop Forward"); //debug
+      }
+      if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
+        Bright();
+        Serial.println("Loop right turn"); //debug
+      }
+      if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
+        Bleft();
+        Serial.println("Loop left turn"); //debug
+      }
+      if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
+        Stop();
+        stat = "stop";
+      }
     }
   }
   if(stat.equals("stand")){
