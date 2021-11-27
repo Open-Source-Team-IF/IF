@@ -93,6 +93,7 @@
               dense
               inset
               readonly
+              :color="`${onoffstyle[index]}`"
             >
             <template v-slot:label>
               <span style="color:black">카트{{Number(index)+1}}</span>
@@ -160,8 +161,9 @@ import axios from 'axios'
         list: {},
         soldout:[],
         error:[],
+        dailysales:'',
         onoff:{0:false,1:false,2:false},
-        dailysales:''
+        onoffstyle : {0:"green",1:"green",2:"green"}
       }
     },
     // 정보를 가져오는 retrieve 함수를 10초마다 실행
@@ -218,9 +220,17 @@ import axios from 'axios'
             arr = JSON.parse(arr.slice(11,arr.length-1))
             arr = JSON.parse(JSON.stringify(arr.con))
             if(arr !="waiting") {
-              this.onoff[idx-1]=true
+              this.onoff[idx-1] = true
             }
           })
+          this.onoffstyle[idx-1] = "green"
+        }
+        // 카트에서 오류 발생 시, 빨간색으로
+        for (var j = 0; j < this.tasks[0].length; j++){
+          var chk = this.tasks[0][j]
+          if(chk.substring(0,2)=="카트") {
+            this.onoffstyle[Number(chk.substring(2,3))-1] = "red"
+          }
         }
       },
 
