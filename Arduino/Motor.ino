@@ -189,6 +189,7 @@ void loop(){
     // Determine Cross road or Stop
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
         Stop();
+        delay(100);
         if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
           if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
             // three way
