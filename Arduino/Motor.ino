@@ -6,9 +6,9 @@
  * LL = Most Left sensor
  * RR = Most right sensor
  */
-int L = 5;
+int L = 4;
 int R = 3;
-int LL = 4;
+int LL = 5;
 int RR = 6;
 
 // A = left wheel, B = right wheel
@@ -88,12 +88,12 @@ void line_trace(char S){
 
 void forced_line_trace(int Delay){
   unsigned long t_Now = millis();
-  unsigned long t_time = t_Now + (unsigned long) Delay;
+  unsigend long t_time = t_Now + (unsigned long) Delay;
   while(t_time > t_Now + Delay){
       t_Now = millis();
       if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
-            line_trace('F');
-            //Serial.println("Loop Forward"); //debug
+        line_trace('F');
+        //Serial.println("Loop Forward"); //debug
           }
       if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
         line_trace('R');
@@ -202,18 +202,10 @@ void loop(){
         Serial.println("CrossLoad Straight"); //debug
         stat = "moving";
         Now = millis();
-        while(millis() - Now < FORWARD_DELAY){
+        while(millis() - Now < TURN_DELAY){
           line_trace('F');
         }
         break;
-      }
-      else if(Direction.equals("SEN")){
-        if(digitalRead(LL) == HIGH){
-          Serial.println("R1");
-        }
-        if(digitalRead(RR) == HIGH){
-          Serial.println("R2");
-        }
       }
     } 
   }
@@ -222,27 +214,21 @@ void loop(){
     Serial.println("I'm in moving");
     // Determine Cross road or Stop
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
-      if(digitalRead(LL) == HIGH){
-        Serial.println("FR1");
-      }
-      if(digitalRead(RR) == HIGH){
-        Serial.println("FR2");
-      }
-      forced_line_trace(100);
-      Stop();
-      if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
-        if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
-          // three way
-          stat = "get_route";
+        forced_line_trace(100);
+        Stop();
+        if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
+          if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
+            // three way
+            stat = "get_route";
+          }
+          else{
+            stat = "stand";
+            Serial.println("Stop Mark"); // If Most left and right sensor are activated, It is a stand
+          }
         }
         else{
-          stat = "stand";
-          Serial.println("Stop Mark"); // If Most left and right sensor are activated, It is a stand
+          stat = "get_route";
         }
-      }
-      else{
-        stat = "get_route";
-      }
     }
     else{
       if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
@@ -268,5 +254,6 @@ void loop(){
     Serial.println("I'm in stand"); //debug
     Serial.println("stand");
     get_startSignal();
+    forced_line_trace(100);
   }
 }
