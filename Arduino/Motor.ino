@@ -86,6 +86,32 @@ void line_trace(char S){
   }
 }
 
+void forced_line_trace(int Delay){
+  unsigned long t_Now = millis();
+  unsigend long t_time = t_Now + (unsigned long) Delay;
+  while(t_time > t_Now + Delay){
+      t_Now = millis();
+      if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
+            line_trace('F');
+            //Serial.println("Loop Forward"); //debug
+          }
+      if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
+        line_trace('R');
+        //Serial.println("Loop right turn"); //debug
+      }
+      if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
+        line_trace('L');
+        //Serial.println("Loop left turn"); //debug
+      }
+      if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
+        Stop();
+        stat = "stop";
+        Serial.println("I'm in stop"); //debug
+      }
+ }
+}
+
+
 void forward() {
   digitalWrite(Ain1, HIGH);
   digitalWrite(Ain2, LOW);
@@ -147,6 +173,7 @@ void setup(){
 void loop(){
 
   if(stat.equals("get_route")){
+    forced_line_trace(100);
     Stop();
     Serial.println("I'm in Cross"); //debug
     Serial.println("get_route"); 
