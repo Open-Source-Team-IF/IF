@@ -173,7 +173,6 @@ void setup(){
 void loop(){
 
   if(stat.equals("get_route")){
-    forced_line_trace(100);
     Stop();
     Serial.println("I'm in Cross"); //debug
     Serial.println("get_route"); 
@@ -215,8 +214,8 @@ void loop(){
     Serial.println("I'm in moving");
     // Determine Cross road or Stop
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
+        forced_line_trace(100);
         Stop();
-        delay(100);
         if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
           if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
             // three way
