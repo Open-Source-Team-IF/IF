@@ -225,7 +225,7 @@ import axios from 'axios'
           })
           this.onoffstyle[idx-1] = "green"
         }
-        // 카트에서 오류 발생 시, 빨간색으로
+        // 카트에서 오류 발생 시, 빨간색으로 표시
         for (var j = 0; j < this.tasks[0].length; j++){
           var chk = this.tasks[0][j]
           if(chk.substring(0,2)=="카트") {
