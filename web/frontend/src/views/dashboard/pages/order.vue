@@ -38,10 +38,10 @@
             </thead>
 
             <tbody>
-              <tr v-for="n in list1.length" :key="n">
-              <td>{{list1[n-1]}} </td>
-              <td>{{list3[n-1]}} </td>
-              <td>{{list2[n-1]}} </td>
+              <tr v-for="n in product.length" :key="n">
+              <td>{{product[n-1]}} </td>
+              <td>{{quantity[n-1]}} </td>
+              <td>{{price[n-1]}} </td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -60,9 +60,9 @@ import axios from "axios";
 export default {
   data() {
     return {
-      list1:[],
-      list2:[],
-      list3:[],
+      product:[],
+      price:[],
+      quantity:[],
       user: '',
       total:'',
       result:''
@@ -80,16 +80,15 @@ export default {
         "Accept": "application/json"
       };
       const url = "http://146.56.166.36:7579/Mobius/app1/"+this.user+"/product/la"
-
-      // 물품, 수량, 가격에 대한 데이터를 잘라 각각의 리스트에 push
       axios.get(url, { headers }).then((response) => {
         var arr = JSON.stringify(response.data)
         arr = JSON.parse(arr.slice(11,arr.length-1))
         arr = Object.values(JSON.parse(JSON.stringify(arr.con)))
+        // 물품, 수량, 가격에 대한 데이터를 잘라 각각의 리스트에 push
         for (var i = 0; i < arr.length; i += 3) {
-          this.list1.push(arr[i]);
-          this.list2.push(arr[i+1]);
-          this.list3.push(arr[i+2]);
+          this.product.push(arr[i]);
+          this.price.push(arr[i+1]);
+          this.quantity.push(arr[i+2]);
           this.total += arr[i+1] * arr[i+2];
         }
         this.result = '총액 : ' + this.total + '원'

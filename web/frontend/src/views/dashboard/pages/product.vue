@@ -47,10 +47,10 @@
             <v-container class="py-0">
               <v-row>
                 <v-col cols="12">
-                  <v-text-field label="물품" v-model="target1"/>
+                  <v-text-field label="물품" v-model="delproduct"/>
                 </v-col>
                 <v-col cols="12">
-                  <v-select :items="option" label="진열대" v-model = "target2"/>
+                  <v-select :items="option" label="진열대" v-model = "delstand"/>
                 </v-col>
 
                 <v-col cols="12" md="5"/>
@@ -78,8 +78,8 @@ import axios from "axios";
         product: '',
         stand: '',
         price: '',
-        target1: '',
-        target2:'',
+        delproduct: '',
+        delstand:'',
         list: {},
         option: ['진열대1','진열대2','진열대3']
       }
@@ -108,7 +108,6 @@ import axios from "axios";
             break
           }
         }
-
         // JSON 형식으로 서버에 데이터 전송
         const headers = {
           "X-M2M-RI": "12345",
@@ -116,24 +115,42 @@ import axios from "axios";
           "Content-Type": "application/vnd.onem2m-res+json;ty=4"
         };
         const url = "http://146.56.166.36:7579/Mobius/web/product";
-
         query = {product: this.product, price:this.price, quantity:this.quantity, stand:this.stand}
         const body = {
         "m2m:cin": {
             "con": query
-          }};
-        axios.post(url, body, { headers });
-        alert(this.stand + "에 " + this.product + " " + tmp + "개를 적재했습니다.")
-        },
+        }};
+        // 모든 데이터를 입력하지 않았을 시의 오류 처리
+        if(!this.product || !this.price || !this.quantity || !this.stand) {
+          alert('데이터를 제대로 입력해주세요.')
+        }
+        else {
+          axios.post(url, body, { headers });
+          alert(this.stand + "에 " + this.product + " " + tmp + "개를 적재했습니다.")
+        }
+      },
 
       // 물품 삭제 함수
       async remove() {
-        this.result=''
-        axios.post("/api/mobius/delete", {
-          product: this.target1,
-          stand: this.target2
-        });
-        alert(this.target2+ "의 " + this.target1 + "를 삭제하였습니다.")
+        // 모든 데이터를 입력하지 않았을 경우의 오류 처리
+        if(!this.delproduct || !this.delstand) {
+          alert('데이터를 제대로 입력해주세요.')
+        }
+        else {
+          await axios.post("/api/mobius/delete", {
+            product: this.delproduct,
+            stand: this.delstand
+          }).then((response) => {
+            // 삭제하려는 물품이 존재하지 않을 경우의 오류 처리
+            if(JSON.parse(JSON.stringify(response.data)).affectedRows==0)
+            {
+              alert("조건에 해당하는 물품이 없습니다.")
+            }
+            else {
+              alert(this.delstand+ "의 " + this.delproduct + "를 삭제하였습니다.")
+            }
+         })
+        }
       }
     }
   }

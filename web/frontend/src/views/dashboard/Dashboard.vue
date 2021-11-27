@@ -25,12 +25,12 @@
               <span
                 class="subheading font-weight-light mx-3"
                 style="align-self: center"
-              >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span>
+              >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
               <v-tab class="mr-4">
                 오류목록
               </v-tab>
               <v-tab>
-                재고부족
+                재고소진
               </v-tab>
             </v-tabs>
           </template>
@@ -183,7 +183,7 @@ import axios from 'axios'
           this.items.push(JSON.parse(this.list[i].con))
         }
 
-        // 오류 목록 및 재고 부족 현황
+        // 오류 목록 및 재고 소진 현황
         await axios.get("/api/mobius/error").then((response) => {
           this.error = response.data;
         })
@@ -202,7 +202,6 @@ import axios from 'axios'
           "X-M2M-Origin": "S",
           "Accept": "application/json"
         }
-
         // 일매출 데이터
         const url = "http://146.56.166.36:7579/Mobius/server/dailysales/la"
         await axios.get(url, { headers }).then((response) => {
@@ -212,7 +211,7 @@ import axios from 'axios'
         })
 
         // 카트 현황
-        for(var idx = 1; idx < 4; idx++) {
+        for(var idx = 1; idx < Object.keys(this.onoff).length + 1; idx++) {
           const url = "http://146.56.166.36:7579/Mobius/cart"+idx+"/status/la"
           await axios.get(url, { headers }).then((response) => {
             var arr = JSON.stringify(response.data)
@@ -233,7 +232,7 @@ import axios from 'axios'
           alert('삭제완료')
           this.retrieve();
         },
-      },
+      }
   }
 </script>
 
