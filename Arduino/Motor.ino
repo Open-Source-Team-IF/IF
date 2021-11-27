@@ -25,11 +25,13 @@ int Bin2 = 11;
  * TURN_DELAY = Cross Load Turn Time
  * Forward DELAY = Cross Load Forward Time
  */
-int pwm = 50;
-int Delay = 10;
-int Time = 0;
-int TURN_DELAY = 400;
-int FORWARD_DELAY = 100;
+int pwm = 128;
+int Delay = 90;
+float Speed = 0.5;
+unsigned long Time = 0;
+unsigned long Now = 0;
+int TURN_DELAY = 1000;
+int FORWARD_DELAY = 500;
 
 /* stat = Cart stat
  * waiting : Cart is waiting for start signal from server. not yet started.
@@ -47,6 +49,40 @@ void get_startSignal(){
       stat = "moving";
       break;
     }
+  }
+}
+
+void line_trace(char S){
+  Time = millis();
+  Serial.println(Time);
+  switch(S){
+  case 'F':
+    if(Time % Delay < Delay * Speed){
+      forward();
+    }
+    else{
+      Stop();
+    }
+    break;
+    case 'R':
+    if(Time % Delay < Delay * Speed){
+      Bright();
+    }
+    else{
+      Stop();
+    }
+    break;
+  case 'L':
+    if(Time % Delay < Delay * Speed){
+      Bleft();
+    }
+    else{
+      Stop();
+    }
+    break;
+  case 'S':
+    Stop();
+    break;
   }
 }
 
@@ -104,10 +140,11 @@ void setup(){
   pinMode(enB, OUTPUT);
 
   get_startSignal();
+  
+  Time = millis();
 }
 
 void loop(){
-  unsigned long Now = millis();
 
   if(stat.equals("get_route")){
     Stop();
@@ -120,26 +157,33 @@ void loop(){
       if(Direction.equals("LFT")){
         Serial.println("CrossLoad Left turn"); //debug
         stat = "moving";
-        Bleft();
-        delay(TURN_DELAY);
+        Now = millis();
+        while(millis() - Now < TURN_DELAY){
+          line_trace('L');
+        }
         break;
       }
       else if(Direction.equals("RGT")){
         Serial.println("CrossLoad right turn"); //debug
         stat = "moving";
-        Bright();
-        delay(TURN_DELAY);
+        Now = millis();
+        while(millis() - Now < TURN_DELAY){
+          line_trace('R');
+        }
         break;
       }
       else if(Direction.equals("STR")){
         Serial.println("CrossLoad Straight"); //debug
         stat = "moving";
-        forward();
-        delay(FORWARD_DELAY);
+        Now = millis();
+        while(millis() - Now < TURN_DELAY){
+          line_trace('F');
+        }
         break;
       }
     } 
   }
+  
   if(stat.equals("moving")){
     Serial.println("I'm in moving");
     // Determine Cross road or Stop
@@ -161,20 +205,21 @@ void loop(){
     }
     else{
       if (digitalRead(L) == LOW && digitalRead(R) == LOW) {
-        forward();
-        Serial.println("Loop Forward"); //debug
+        line_trace('F');
+        //Serial.println("Loop Forward"); //debug
       }
       if (digitalRead(L) == LOW && digitalRead(R) == HIGH) {
-        Bright();
-        Serial.println("Loop right turn"); //debug
+        line_trace('R');
+        //Serial.println("Loop right turn"); //debug
       }
       if (digitalRead(L) == HIGH && digitalRead(R) == LOW) {
-        Bleft();
-        Serial.println("Loop left turn"); //debug
+        line_trace('L');
+        //Serial.println("Loop left turn"); //debug
       }
       if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
         Stop();
         stat = "stop";
+        Serial.println("I'm in stop"); //debug
       }
     }
   }
