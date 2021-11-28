@@ -38,7 +38,6 @@ void sendStopSignal(){
       http.end();
     }
   }
-  
 }
 
 void sendCrossRoadSignal(){
@@ -67,29 +66,34 @@ void getDirection(){
   String Direction;
   Serial.println("getting Direction");
   if(WiFi.status() == WL_CONNECTED){
-    while(1){
+    do{
       HTTPClient http;
-      http.begin(serverName + Name + "/direction/la");
+      http.begin(serverName + Name + "/status/la");
       http.addHeader("Content-Type", "application/json");
       http.addHeader("X-M2M-RI","/Mobius");
       http.addHeader("X-M2M-Origin","SOrigin");
       int httpResponseCode = http.GET();
-      if(httpResponseCode == 200){
-        String payload = http.getString();
-        Direction = jsonParse(payload, "con");
-        if(Direction.equals("LFT") || Direction.equals("RGT") || Direction.equals("STR")){
+      String payload = http.getString();
+      stat = jsonParse(payload, "con");
+      http.end();
+      if(stat.equals("moving")){
+        http.begin(serverName + Name + "/direction/la");
+        http.addHeader("Content-Type", "application/json");
+        http.addHeader("X-M2M-RI","/Mobius");
+        http.addHeader("X-M2M-Origin","SOrigin");
+        int httpResponseCode = http.GET();
+        if(httpResponseCode == 200){
+          String payload = http.getString();
+          Direction = jsonParse(payload, "con");
           Serial.println(Direction);
           http.end();
-          break;
         }
       }
-      else{
-        Serial.println("Response Code is not 200 !!");
-      }
-     http.end();
-    }
-  }
+      delay(1000);
+    }  
+  } while(!stat.equals("moving"));
 }
+
 
 int startSignal(){
   if(WiFi.status() == WL_CONNECTED){
