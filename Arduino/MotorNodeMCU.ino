@@ -19,7 +19,6 @@ String jsonParse(String str, String findstr){
 }
 
 void sendStopSignal(){
-  
   if(WiFi.status()== WL_CONNECTED){
     HTTPClient http;  
     int httpResponseCode = 400;
@@ -41,7 +40,6 @@ void sendStopSignal(){
 }
 
 void sendCrossRoadSignal(){
-  
   if(WiFi.status()== WL_CONNECTED){
     HTTPClient http;  
     int httpResponseCode = 400;
@@ -91,9 +89,9 @@ void getDirection(){
         }
       }
       delay(1000);
-    } while(!(stat.equals("moving") && httpResponseCode == 200)); 
-  } 
-}
+    } while(!(stat.equals("moving") && httpResponseCode == 200));
+  }  
+} 
 
 
 int startSignal(){
@@ -107,8 +105,10 @@ int startSignal(){
     if(httpResponseCode == 200){
       String payload = http.getString();
       stat = jsonParse(payload, "con");
-      if(stat.equals("moving"))
+      if(stat.equals("moving")){
+        //Serial.println("");
         Serial.println("Go");
+      }
     }
     else{
       Serial.println("Response Code is not 200 !!");
@@ -135,22 +135,22 @@ void setup() {
 }
 
 void loop() {
-      if(stat == "moving"){
-        if(Serial.available()){
-          String temp = Serial.readStringUntil('\n');
-          temp.trim();
-          if(temp.equals("get_route")){
-            sendCrossRoadSignal();
-            getDirection();
-          }
-          if(temp.equals("stand")){
-            stat = "stand";
-            sendStopSignal();
-          }
-        }
+  if(stat.equals("moving")){
+    if(Serial.available()){
+      String temp = Serial.readStringUntil('\n');
+      temp.trim();
+      if(temp.equals("get_route")){
+        sendCrossRoadSignal();
+        getDirection();
       }
-      else{
-        startSignal();
-        delay(1000);
+      if(temp.equals("stand")){
+        stat = "stand";
+        sendStopSignal();
       }
+    }
+  }
+  else{
+    startSignal();
+    delay(1000);
+  }
 }
