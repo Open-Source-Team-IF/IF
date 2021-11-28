@@ -82,7 +82,7 @@ void getDirection(){
         http.addHeader("Content-Type", "application/json");
         http.addHeader("X-M2M-RI","/Mobius");
         http.addHeader("X-M2M-Origin","SOrigin");
-        int httpResponseCode = http.GET();
+        httpResponseCode = http.GET();
         if(httpResponseCode == 200){
           String payload = http.getString();
           Direction = jsonParse(payload, "con");
