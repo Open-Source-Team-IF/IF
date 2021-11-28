@@ -3,8 +3,8 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-char* ssid = "SF_LOW";
-char* password = "t1v0r20!^";
+char* ssid = "iptime";
+char* password = "asdf1324";
 
 //Your Domain name with URL path or IP address with path
 String serverName = "http://146.56.166.36:7579/Mobius";
@@ -91,8 +91,8 @@ void getDirection(){
         }
       }
       delay(1000);
-    }  
-  } while(!(stat.equals("moving") && httpResponseCode == 200));
+    } while(!(stat.equals("moving") && httpResponseCode == 200)); 
+  } 
 }
 
 
