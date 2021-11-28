@@ -92,7 +92,7 @@ void getDirection(){
       }
       delay(1000);
     }  
-  } while(!stat.equals("moving") && httpResponseCode == 200);
+  } while(!(stat.equals("moving") && httpResponseCode == 200));
 }
 
 
