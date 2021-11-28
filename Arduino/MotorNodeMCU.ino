@@ -64,6 +64,7 @@ void sendCrossRoadSignal(){
 
 void getDirection(){
   String Direction;
+  int httpResponseCode = 400;
   Serial.println("getting Direction");
   if(WiFi.status() == WL_CONNECTED){
     do{
@@ -72,7 +73,7 @@ void getDirection(){
       http.addHeader("Content-Type", "application/json");
       http.addHeader("X-M2M-RI","/Mobius");
       http.addHeader("X-M2M-Origin","SOrigin");
-      int httpResponseCode = http.GET();
+      http.GET();
       String payload = http.getString();
       stat = jsonParse(payload, "con");
       http.end();
@@ -91,7 +92,7 @@ void getDirection(){
       }
       delay(1000);
     }  
-  } while(!stat.equals("moving"));
+  } while(!stat.equals("moving") && httpResponseCode == 200);
 }
 
 
