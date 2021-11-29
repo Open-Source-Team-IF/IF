@@ -26,8 +26,8 @@ int Bin2 = 11;
  * Forward DELAY = Cross Load Forward Time
  */
 int pwm = 128;
-int Delay = 25;
-float Speed = 0.53;
+int Delay = 30;
+float Speed = 0.45;
 unsigned long Time = 0;
 unsigned long Now = 0;
 int TURN_DELAY = 1000;
