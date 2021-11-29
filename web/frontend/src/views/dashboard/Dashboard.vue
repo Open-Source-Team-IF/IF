@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col cols="12" md="6">
-        <base-material-card class="px-5 py-3">
+        <base-material-card class="px-5 py-3" id="itemtable">
           <template #heading>
               <p class="text-h3 font-weight-light" align="center">물품별 재고 현황</p>
           </template>
@@ -15,7 +15,7 @@
         </base-material-card>
       </v-col>
       <v-col cols="12" md="6">
-        <base-material-card color="warning" class="px-5 py-3">
+        <base-material-card color="warning" class="px-5 py-3" id="errtable">
           <template #heading>
             <v-tabs
               v-model="tabs"
@@ -34,7 +34,6 @@
               </v-tab>
             </v-tabs>
           </template>
-
           <v-tabs-items v-model="tabs">
             <v-tab-item v-for="n in 2" :key="n">
               <v-card-text>
@@ -47,6 +46,9 @@
                     </v-icon>
                     </v-col>
                   </v-row>
+                  <br :key="i">
+                  <v-divider :key="i"></v-divider>
+                  <br :key="i">
                 </template>
               </v-card-text>
             </v-tab-item>
@@ -60,7 +62,9 @@
           :options="dailySalesChart.options"
           color="success"
           type="Line"
+          style="height:292px"
         >
+        <br>
         <h4 class="card-title font-weight-light mt-2 ml-2">
           매출동향
         </h4>
@@ -70,6 +74,9 @@
           </v-icon>
           <span class="green--text">55%</span>&nbsp;
         </p>
+        <template #actions>
+          <span class="text-caption grey--text font-weight-light"></span>
+        </template>
         </base-material-chart-card>
       </v-col>
 
@@ -78,7 +85,14 @@
           color="success"
           icon="mdi-store"
           title="일매출"
-          v-bind:value="dailysales"
+          v-bind:value="`${dailysales}원`"
+        />
+        <br>
+        <base-material-stats-card
+          color="success"
+          icon="mdi-store"
+          title="월매출"
+          v-bind:value="`${monthlysales}원`"
         />
       </v-col>
 
@@ -162,6 +176,7 @@ import axios from 'axios'
         soldout:[],
         error:[],
         dailysales:'',
+        monthlysales:'',
         onoff:{0:false,1:false,2:false},
         onoffstyle : {0:"green",1:"green",2:"green"}
       }
@@ -199,17 +214,31 @@ import axios from 'axios'
           this.tasks[1].push(this.soldout[k].con)
         }
 
+        // 위의 두 요소의 크기 맞추기
+        var itemtable = document.getElementById('itemtable')
+        var errtable = document.getElementById('errtable')
+        errtable.style.height  = itemtable.offsetHeight+ "px"
+
         const headers = {
           "X-M2M-RI": "12345",
           "X-M2M-Origin": "S",
           "Accept": "application/json"
         }
+
         // 일매출 데이터
-        const url = "http://146.56.166.36:7579/Mobius/server/dailysales/la"
-        await axios.get(url, { headers }).then((response) => {
+        const url1 = "http://146.56.166.36:7579/Mobius/server/dailysales/la"
+        await axios.get(url1, { headers }).then((response) => {
           var arr = JSON.stringify(response.data)
           arr = JSON.parse(arr.slice(11,arr.length-1))
           this.dailysales = JSON.parse(JSON.stringify(arr.con))
+        })
+
+        // 월매출 데이터
+        const url2 = "http://146.56.166.36:7579/Mobius/server/monthlysales/la"
+        await axios.get(url2, { headers }).then((response) => {
+          var arr = JSON.stringify(response.data)
+          arr = JSON.parse(arr.slice(11,arr.length-1))
+          this.monthlysales = JSON.parse(JSON.stringify(arr.con))
         })
 
         // 카트 현황
