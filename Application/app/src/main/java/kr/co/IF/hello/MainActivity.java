@@ -271,6 +271,10 @@ public class MainActivity extends AppCompatActivity {
         displayMessage(message);
         Toast.makeText(this.getApplicationContext(),"주문이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
+        String text = "사용자님이 주문한 " + mProductTextView.getText() + " " + mQuantity + "개, " + mProductTextView2 + " "
+                + mQuantity2 + "개 주문이 완료되었습니다.";
+        noti_by_tts(text);
+
         new Thread(){
             public void run(){
                 try{
@@ -411,7 +415,7 @@ public class MainActivity extends AppCompatActivity {
                             int order = (int)con.get("order");
                             if(order == 2){
                                 noti_order();
-                                noti_by_tts();
+                                noti_by_tts("배달이 완료되었습니다.");
                                 timer.cancel();
                             }
 
@@ -427,8 +431,7 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(task, 1000, 5000);
     }
 
-    public void noti_by_tts(){
-        String text = "주문이 완료되었습니다.";
+    public void noti_by_tts(String text){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         }
