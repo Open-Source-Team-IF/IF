@@ -49,6 +49,8 @@ String sub_get_state(){
 
   //Serial.print("[Debug] Setted state : ");
   //Serial.println(state);
+
+  Serial.println(state);
   
   return state;
 }
@@ -73,7 +75,7 @@ void setup() {
 }
 
 void loop() {
-  if(sub_getstate() == "run"){
+  if(sub_get_state() == "run"){
     Serial.println('1');
     myservo.write(200);    
   }
