@@ -160,7 +160,7 @@ import axios from 'axios'
             value: 'quantity',
           },
           {
-            text: 'Location',
+            text: '위치',
             value: 'stand',
           },
         ],
@@ -230,15 +230,14 @@ import axios from 'axios'
         await axios.get(url1, { headers }).then((response) => {
           var arr = JSON.stringify(response.data)
           arr = JSON.parse(arr.slice(11,arr.length-1))
-          this.dailysales = JSON.parse(JSON.stringify(arr.con))
+          this.dailysales = JSON.parse(JSON.stringify(arr.con)).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         })
-
         // 월매출 데이터
         const url2 = "http://146.56.166.36:7579/Mobius/server/monthlysales/la"
         await axios.get(url2, { headers }).then((response) => {
           var arr = JSON.stringify(response.data)
           arr = JSON.parse(arr.slice(11,arr.length-1))
-          this.monthlysales = JSON.parse(JSON.stringify(arr.con))
+          this.monthlysales = JSON.parse(JSON.stringify(arr.con)).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         })
 
         // 카트 현황
