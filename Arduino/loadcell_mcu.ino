@@ -124,6 +124,8 @@ void loop() {
     int quantity = sub_get_quantity();
     int cnt = 0;
 
+    Serial.println("SEN");
+    //Serial.flush();
     while(cnt != quantity){
       if(Serial.available()){
         String temp = Serial.readStringUntil('\n');
@@ -139,5 +141,5 @@ void loop() {
 
     send_detected();
   }
-  delay(500);
+  delay(1000);
 }
