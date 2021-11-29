@@ -20,16 +20,23 @@ void setup() {
 }
 
 void loop() {
-  tmp1 = scale1.get_units();
-  
-  // 무게변화 감지시
-  if(abs(avg1-tmp1) > 1){
-    Serial.println("DE");
+  if(Serial.available()){
+    String temp = Serial.readStringUntil("\n");
+    //Serial.println("MCU : " + temp);
+    temp.trim();
+    if(temp.equals("SEN")){
+      tmp1 = scale1.get_units();
+      
+      // 무게변화 감지시
+      if(abs(avg1-tmp1) > 1.2){
+        Serial.println("DE");
+      }
+    
+      avg1 = scale1.get_units(5);
+    
+      scale1.power_down();             // put the ADC in sleep mode
+      delay(100);
+      scale1.power_up();
+    }
   }
-
-  avg1 = scale1.get_units(5);
-
-  scale1.power_down();             // put the ADC in sleep mode
-  delay(200);
-  scale1.power_up();
 }
