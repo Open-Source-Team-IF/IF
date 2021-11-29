@@ -8,6 +8,7 @@ char* ssid = "iptime";
 char* password = "asdf1324";
 String serverName = "http://146.56.166.36:7579/Mobius";
 String Name = "stand1";
+int flag = 0;
 
 String jsonParse(String str, String findstr){
   int index = str.indexOf(findstr) + findstr.length() + 3;
@@ -102,7 +103,7 @@ void send_detected(){
 void setup() {
   Serial.begin(38400); 
   WiFi.begin(ssid, password);
-  Serial.println("Connecting");
+  Serial.println("Connecting"); 
   while(WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
@@ -117,14 +118,17 @@ void setup() {
 
 void loop() {
   String state = sub_get_state();
-  Serial.println(state);
+  //Serial.println(state);
   if(sub_get_state() == "run"){
-    Serial.println("State : run");	// debug 
+    //Serial.println("State : run");	// debug 
+    if(flag == 0){
+      flag = 1;
+      Serial.println("SEN");
+    }
 
     int quantity = sub_get_quantity();
     int cnt = 0;
 
-    Serial.println("SEN");
     //Serial.flush();
     while(cnt != quantity){
       if(Serial.available()){
@@ -133,13 +137,17 @@ void loop() {
         if(temp[0] == 'D'){
           if(temp[1] == 'E'){
             cnt++;
-            Serial.println("D1");	// debug
+            if(cnt != quantity){
+              Serial.println("SEN");
+            }
+            //Serial.println("D1");	// debug
           }
         }
       }
     }
 
     send_detected();
+    flag = 0;
   }
-  delay(1000);
+  delay(100);
 }
