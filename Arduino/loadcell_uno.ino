@@ -10,10 +10,13 @@ float avg2;
 float tmp1;
 float tmp2;
 
+int state = 0;
+
 HX711 scale1(5, 6); 
 
 void setup() {
   Serial.begin(38400);
+  Serial.println("Start Receving");
   scale1.set_scale(8000.f); // 1. 7500
   scale1.tare();
   avg1 = (scale1.get_units(10),1);
@@ -21,22 +24,32 @@ void setup() {
 
 void loop() {
   if(Serial.available()){
-    String temp = Serial.readStringUntil("\n");
-    //Serial.println("MCU : " + temp);
+    String temp = Serial.readStringUntil('\n');
     temp.trim();
+    //Serial.println("MCU : " + temp);
     if(temp.equals("SEN")){
-      tmp1 = scale1.get_units();
-      
-      // 무게변화 감지시
-      if(abs(avg1-tmp1) > 1.2){
-        Serial.println("DE");
-      }
-    
-      avg1 = scale1.get_units(5);
-    
-      scale1.power_down();             // put the ADC in sleep mode
-      delay(100);
-      scale1.power_up();
+      Serial.println("D1");
+      state = 1;
     }
   }
+  
+  tmp1 = scale1.get_units();
+  //Serial.println(tmp1);
+  
+  
+  // 무게변화 감지시
+  if(abs(avg1-tmp1) > 1){
+    Serial.println(avg1);
+    Serial.println(tmp1);
+    if(state == 1){
+      Serial.println("DE");
+      state = 0;
+    }
+  }
+
+  avg1 = scale1.get_units(3);
+
+  scale1.power_down();             // put the ADC in sleep mode
+  delay(100);
+  scale1.power_up();
 }
