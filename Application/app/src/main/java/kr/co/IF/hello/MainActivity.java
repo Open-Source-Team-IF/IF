@@ -271,6 +271,10 @@ public class MainActivity extends AppCompatActivity {
         displayMessage(message);
         Toast.makeText(this.getApplicationContext(),"주문이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
+        String text = "사용자님이 주문한 " + mProductTextView.getText() + " " + mQuantity + "개, " + mProductTextView2 + " "
+                + mQuantity2 + "개 주문이 완료되었습니다.";
+        noti_by_tts(text);
+
         new Thread(){
             public void run(){
                 try{
@@ -293,9 +297,9 @@ public class MainActivity extends AppCompatActivity {
         JSONObject tmp = new JSONObject();
         JSONObject jObj2 = new JSONObject();
         try{
-            tmp.put("product", product);
-            tmp.put("quantity", mQuantity);
-            tmp.put("price", PRICE_CARROT);
+            tmp.put("product1", product);
+            tmp.put("quantity1", mQuantity);
+            tmp.put("price1", PRICE_CARROT);
             tmp.put("product2", product2);
             tmp.put("quantity2", mQuantity2);
             tmp.put("price2", PRICE_COCACOLA);
@@ -393,7 +397,6 @@ public class MainActivity extends AppCompatActivity {
                             conn.setDoInput(true);
 
                             int responseCode = conn.getResponseCode();
-                            System.out.println(responseCode);
 
                             InputStream is = conn.getInputStream();
                             StringBuilder sb = new StringBuilder();
@@ -410,9 +413,9 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject con = m2m.getJSONObject("con");
 
                             int order = (int)con.get("order");
-                            if(order == 1){
+                            if(order == 2){
                                 noti_order();
-                                noti_by_tts();
+                                noti_by_tts("배달이 완료되었습니다.");
                                 timer.cancel();
                             }
 
@@ -428,8 +431,7 @@ public class MainActivity extends AppCompatActivity {
         timer.schedule(task, 1000, 5000);
     }
 
-    public void noti_by_tts(){
-        String text = "주문이 완료되었습니다.";
+    public void noti_by_tts(String text){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         }
