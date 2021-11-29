@@ -10,6 +10,8 @@ String Name = "stand1";
 char* ssid = "iptime";
 char* password = "asdf1324";
 
+String state = "wait";
+
 Servo myservo;  // create servo object to control a servo
 
 
@@ -76,10 +78,15 @@ void setup() {
 
 void loop() {
   if(sub_get_state() == "run"){
+    if(state != "run"){
+      state = "run";
+      delay(1000);
+    }
     Serial.println('1');
-    myservo.write(200);    
+    myservo.write(195);    
   }
   else{
+    state = "wait";
     Serial.println("0");
     myservo.write(90);
   }
