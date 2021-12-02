@@ -31,7 +31,7 @@ float Speed = 0.45;
 unsigned long Time = 0;
 unsigned long Now = 0;
 int TURN_DELAY = 1000;
-int FORWARD_DELAY = 500;
+int FORWARD_DELAY = 750;
 
 /* stat = Cart stat
  * waiting : Cart is waiting for start signal from server. not yet started.
@@ -226,7 +226,7 @@ void loop(){
     if(digitalRead(LL) == HIGH || digitalRead(RR) == HIGH){
       //forced_line_trace(500);
       Stop();
-      delay(2000);
+      delay(1000);
       if (digitalRead(LL) == HIGH && digitalRead(RR) == HIGH) {
         if(digitalRead(L) == HIGH && digitalRead(R) == HIGH){
           // three way
