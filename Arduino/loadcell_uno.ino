@@ -13,6 +13,7 @@ float tmp2;
 int state = 0;
 
 HX711 scale1(5, 6); 
+HX711 scale2(7, 8); 
 
 void setup() {
   Serial.begin(38400);
@@ -20,6 +21,10 @@ void setup() {
   scale1.set_scale(8000.f); // 1. 7500
   scale1.tare();
   avg1 = (scale1.get_units(10),1);
+
+  scale2.set_scale(8000.f);
+  scale2.tare();
+  avg2 = (scale2.get_units(10),1);
 }
 
 void loop() {
@@ -34,13 +39,14 @@ void loop() {
   }
   
   tmp1 = scale1.get_units();
+  tmp2 = scale1.get_units();
   //Serial.println(tmp1);
   
   
   // 무게변화 감지시
-  if(abs(avg1-tmp1) > 1){
-    Serial.println(avg1);
-    Serial.println(tmp1);
+  if(abs(avg1-tmp1) > 1 || abs(avg2-tmp2) > 1){
+    //Serial.println(avg1);
+    //Serial.println(tmp1);
     if(state == 1){
       Serial.println("DE");
       state = 0;
@@ -48,8 +54,11 @@ void loop() {
   }
 
   avg1 = scale1.get_units(3);
+  avg2 = scale1.get_units(3);
 
   scale1.power_down();             // put the ADC in sleep mode
+  scale2.power_down();  
   delay(100);
   scale1.power_up();
+  scale2.power_up();
 }

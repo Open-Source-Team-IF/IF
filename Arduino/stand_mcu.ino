@@ -83,7 +83,7 @@ void loop() {
       delay(1000);
     }
     Serial.println('1');
-    myservo.write(195);    
+    myservo.write(50);    
   }
   else{
     state = "wait";
