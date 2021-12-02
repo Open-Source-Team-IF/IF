@@ -81,7 +81,7 @@ import axios from "axios";
         delproduct: '',
         delstand:'',
         list: {},
-        option: ['진열대1','진열대2','진열대3']
+        option: ['진열대1','진열대2','진열대3','진열대4','진열대5','진열대6']
       }
     },
     methods: {
