@@ -1,10 +1,13 @@
 import requests
 import json
+import time
 
 server = "http://146.56.166.36:7579/Mobius"
+delay = 0.1
 
 # AE 생성 (xml) -- 작동 잘 되는거 확인 했음
 def create_ae_xml(ae, aei, api):
+    time.sleep(delay)
     request_headers = {}
     request_headers['Content-Type'] = "application/vnd.onem2m-res+xml;ty=2"
     request_headers['X-M2M-RI'] = "12345"
@@ -21,12 +24,13 @@ def create_ae_xml(ae, aei, api):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     if(res.status_code == 201):
         print("Create OK")
  
 # AE 조회
 def get_ae(ae, aei):
+    time.sleep(delay)
     request_headers = {}
     # request_headers['Accept'] = "application/json"
     request_headers['X-M2M-RI'] = "12345"
@@ -37,12 +41,13 @@ def get_ae(ae, aei):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     
     return res_data
  
 # AE 삭제 (xml)
 def delete_ae_xml(ae, aei):
+    time.sleep(delay)
     request_headers = {}
     request_headers['X-M2M-RI'] = "12345"
     request_headers['X-M2M-Origin'] = aei
@@ -52,12 +57,13 @@ def delete_ae_xml(ae, aei):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     if(res.status_code == 200):
         print("Delete OK")
     
 # CNT 생성 (xml)    
 def create_cnt_xml(ae, aei, cnt):
+    time.sleep(delay)
     request_headers = {}
     request_headers['Content-Type'] = "application/vnd.onem2m-res+xml;ty=3"
     request_headers['X-M2M-RI'] = "12345"
@@ -72,12 +78,13 @@ def create_cnt_xml(ae, aei, cnt):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     if(res.status_code == 201):
         print("Create OK")   
 
 # CNT 조회
 def get_cnt(ae, aei, cnt):
+    time.sleep(delay)
     request_headers = {}
     # request_headers['Accept'] = "application/json"
     request_headers['X-M2M-RI'] = "12345"
@@ -88,12 +95,13 @@ def get_cnt(ae, aei, cnt):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     
     return res_data        
         
 # CNT 삭제 (xml)
 def delete_cnt_xml(ae, aei, cnt):
+    time.sleep(delay)
     request_headers = {}
     request_headers['locale'] = "ko"
     request_headers['X-M2M-RI'] = "12345"
@@ -104,12 +112,13 @@ def delete_cnt_xml(ae, aei, cnt):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     if(res.status_code == 200):
         print("Delete OK")
         
 # cin 생성 (xml)
 def create_cin_xml(ae, aei, cnt, data):
+    time.sleep(delay)
     request_headers = {}
     request_headers['Content-Type'] = "application/vnd.onem2m-res+xml;ty=4"
     request_headers['X-M2M-RI'] = "12345"
@@ -125,12 +134,13 @@ def create_cin_xml(ae, aei, cnt, data):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print(json.dumps(res_data, indent=2))
+    # print(json.dumps(res_data, indent=2))
     if(res.status_code == 201):
         print("Create OK")   
 
 # cin 조회
 def get_cin(ae, aei, cnt):
+    time.sleep(delay)
     request_headers = {}
     request_headers['X-M2M-RI'] = "12345"
     request_headers['X-M2M-Origin'] = aei
@@ -140,7 +150,9 @@ def get_cin(ae, aei, cnt):
     res_data = json.loads(res.text)
     
     print("Resource Code", " :: ", res.status_code)
-    print("Con", " :: ", res_data['m2m:cin']['con'])
+    if(res.status_code == 200):
+        print("Con", " :: ", res_data['m2m:cin']['con'])
+        return res_data['m2m:cin']['con']
     # print(json.dumps(res_data, indent=2))
     
-    return res_data['m2m:cin']['con']
+    return 'error'

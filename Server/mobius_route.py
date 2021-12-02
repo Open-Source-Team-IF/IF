@@ -222,6 +222,7 @@ def get_route(start, final):
     trace.append(start)
     trace.reverse()
 
+    print('Routing Done...')
     # print('=== BFS ===')
     # print(start, '에서 ', final, '까지의 정보')
     # print('최단 거리 : ', costs[final])
