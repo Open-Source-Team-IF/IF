@@ -25,7 +25,7 @@
               <span
                 class="subheading font-weight-light mx-3"
                 style="align-self: center"
-              >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
+              >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>
               <v-tab class="mr-4">
                 오류목록
               </v-tab>
@@ -181,10 +181,10 @@ import axios from 'axios'
         onoffstyle : {0:"green",1:"green",2:"green"}
       }
     },
-    // 정보를 가져오는 retrieve 함수를 10초마다 실행
+    // 정보를 가져오는 retrieve 함수를 1초마다 실행
     mounted() {
       this.retrieve()
-      setInterval(this.retrieve,10000);
+      setInterval(this.retrieve,1000);
     },
     methods: {
       async retrieve () {
