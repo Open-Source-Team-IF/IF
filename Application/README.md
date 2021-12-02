@@ -1,11 +1,10 @@
 1. 초기화면
 
-![KakaoTalk_20211129_192925961_02](https://user-images.githubusercontent.com/62174950/143857498-b77ec2cd-4cbf-4561-ad8c-8b74e8737093.jpg)
-
+![Screenshot_20211202-151254_TEAM_IF_MARKET](https://user-images.githubusercontent.com/62174950/144426522-f2e622c5-0cfb-43b8-bb81-6550ef1fae7d.jpg)
 
 2. 주문화면
 
-![KakaoTalk_20211129_192925961_01](https://user-images.githubusercontent.com/62174950/143857558-fabba379-8794-4a4c-9693-fdcd31b201f8.jpg)
+![Screenshot_20211202-151803_TEAM_IF_MARKET](https://user-images.githubusercontent.com/62174950/144426592-20a04e7f-1d20-467c-a36a-db2303120bb0.jpg)
 
 3. 주문 완료 화면
 
