@@ -34,8 +34,8 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private final int PRICE_CARROT = 800;
-    private final int PRICE_COCACOLA = 1250;
+    private final int PRICE_KITKAT = 800;
+    private final int PRICE_APOLLO = 1250;
 
     private int mQuantity = 0;
     private int mQuantity2 = 0;
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
         String product2 = "품목 : " + mProductTextView2.getText();
         String quantity2 = "수량 : " + mQuantity2;
 
-        int price = PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2;
+        int price = PRICE_KITKAT * mQuantity + PRICE_APOLLO * mQuantity2;
 
         String formattedPrice = "총액 : "
                 + NumberFormat.getCurrencyInstance(Locale.KOREA).format(price);
@@ -299,10 +299,10 @@ public class MainActivity extends AppCompatActivity {
         try{
             tmp.put("product1", product);
             tmp.put("quantity1", mQuantity);
-            tmp.put("price1", PRICE_CARROT);
+            tmp.put("price1", PRICE_KITKAT);
             tmp.put("product2", product2);
             tmp.put("quantity2", mQuantity2);
-            tmp.put("price2", PRICE_COCACOLA);
+            tmp.put("price2", PRICE_APOLLO);
             jObj2.put("con", tmp);
             jObj.put("m2m:cin", jObj2);
         } catch(JSONException e1){
@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         display(mQuantity);
-        displayPrice(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
+        displayPrice(PRICE_KITKAT * mQuantity + PRICE_APOLLO * mQuantity2);
     }
 
     public void decrement(View view) {
@@ -497,7 +497,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         display(mQuantity);
-        displayPrice(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
+        displayPrice(PRICE_KITKAT * mQuantity + PRICE_APOLLO * mQuantity2);
     }
 
     public void increment2(View view) {
@@ -509,7 +509,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         display2(mQuantity2);
-        displayPrice(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
+        displayPrice(PRICE_KITKAT * mQuantity + PRICE_APOLLO * mQuantity2);
     }
 
     public void decrement2(View view) {
@@ -521,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         display2(mQuantity2);
-        displayPrice(PRICE_CARROT * mQuantity + PRICE_COCACOLA * mQuantity2);
+        displayPrice(PRICE_KITKAT * mQuantity + PRICE_APOLLO * mQuantity2);
     }
 
     /**
