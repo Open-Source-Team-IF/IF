@@ -271,8 +271,8 @@ public class MainActivity extends AppCompatActivity {
         displayMessage(message);
         Toast.makeText(this.getApplicationContext(),"주문이 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
-        String text = "사용자님이 주문한 " + mProductTextView.getText() + " " + mQuantity + "개, " + mProductTextView2 + " "
-                + mQuantity2 + "개 주문이 완료되었습니다.";
+        String text = "사용자님이 주문한 " + mProductTextView.getText() + " " + mQuantity + "개, " +
+                mProductTextView2.getText() + " " + mQuantity2 + "개 주문이 완료되었습니다.";
         noti_by_tts(text);
 
         new Thread(){
