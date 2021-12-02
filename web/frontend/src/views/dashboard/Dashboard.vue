@@ -181,10 +181,10 @@ import axios from 'axios'
         onoffstyle : {0:"green",1:"green",2:"green"}
       }
     },
-    // 정보를 가져오는 retrieve 함수를 1초마다 실행
+    // 정보를 가져오는 retrieve 함수를 5초마다 실행
     mounted() {
       this.retrieve()
-      setInterval(this.retrieve,1000);
+      setInterval(this.retrieve,5000);
     },
     methods: {
       async retrieve () {
@@ -249,6 +249,9 @@ import axios from 'axios'
             arr = JSON.parse(JSON.stringify(arr.con))
             if(arr !="waiting") {
               this.onoff[idx-1] = true
+            }
+            else {
+              this.onoff[idx-1] = false
             }
           })
           this.onoffstyle[idx-1] = "green"
