@@ -104,11 +104,6 @@ void forced_line_trace(int Delay){
         line_trace('L');
         //Serial.println("Loop left turn"); //debug
       }
-      //if (digitalRead(L) == HIGH && digitalRead(R) == HIGH){
-      //  Stop();
-      //  stat = "stop";
-      //  Serial.println("I'm in stop"); //debug
-      //}
  }
 }
 
@@ -202,10 +197,6 @@ void loop(){
       else if(Direction.equals("STR")){
         Serial.println("CrossLoad Straight"); //debug
         stat = "moving";
-        //Now = millis();
-        //while(millis() - Now < FORWARD_DELAY){
-        //  line_trace('F');
-        //}
         forced_line_trace(FORWARD_DELAY);
         break;
       }
