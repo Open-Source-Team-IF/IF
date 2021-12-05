@@ -209,14 +209,6 @@ void loop(){
         forced_line_trace(FORWARD_DELAY);
         break;
       }
-      else if(Direction.equals("SEN")){
-        if(digitalRead(LL) == HIGH){
-          Serial.println("R1");
-        }
-        if(digitalRead(RR) == HIGH){
-          Serial.println("R2");
-        }
-      }
     } 
   }
   
