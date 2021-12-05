@@ -234,8 +234,8 @@ void loop(){
         }
         
         else{
+          // If Most left and right sensor are activated, It is a stand
           stat = "stand";
-          Serial.println("Stop Mark"); // If Most left and right sensor are activated, It is a stand
         }
       }
       else{
